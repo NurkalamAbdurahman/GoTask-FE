@@ -1,13 +1,17 @@
-import './App.css'
-
-function App() {
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/home/home";
+import Dasboard from "./pages/dasboard/dasboard";
+import NotFound from "./pages/notFound/notFound";
+const App = () => {
   return (
-    <>
-    <h1 className="text-3xl text-blue-600">
-      GoTask
-    </h1>
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/Dasboard" element={<Dasboard/>} />
+        <Route path="*" element={<NotFound/>} />
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;
