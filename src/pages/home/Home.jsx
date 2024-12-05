@@ -1,4 +1,5 @@
 import KontenLD from "../../components/kontenLD/kontenLD";
+import KontenP10 from "../../components/kontenP10/kontenP10";
 import KontenP2 from "../../components/kontenP2/KontenP2";
 import KontenP3 from "../../components/KontenP3/KontenP3";
 import KontenP4 from "../../components/kontenP4/kontenP4";
@@ -71,6 +72,12 @@ const Home = () => {
         <KontenP9/>
       </div>
       {/* Halaman 9 End */}
+      
+      {/* Halaman 10 Start */}
+      <div>
+        <KontenP10/>
+      </div>
+      {/* Halaman 10 End */}
     </div>
   );
 };
