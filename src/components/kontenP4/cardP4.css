@@ -1,0 +1,13 @@
+/* HTML: <div class="rounded-tab"></div> */
+.rounded-tab {
+  --r: 10px; /* control the radius */
+  
+  line-height: 1.8;
+  border-inline: var(--r) solid #0000;
+  border-radius: calc(2 * var(--r)) calc(2 * var(--r)) 0 0 / var(--r);
+  mask: radial-gradient(var(--r) at var(--r) 0, #0000 98%, #000 101%)
+      calc(-1 * var(--r)) 100%/100% var(--r) repeat-x,
+    conic-gradient(#000 0 0) padding-box;
+  background: #1d2f3b border-box;
+  width: fit-content;
+}
