@@ -6,6 +6,7 @@ import KontenP5 from "../../components/KontenP5/KontenP5";
 import KontenP6 from "../../components/kontenP6/KontenP6";
 import KontenP7 from "../../components/kontenP7/KontenP7";
 import KontenP8 from "../../components/kontenP8/KontenP8";
+import KontenP9 from "../../components/kontenP9/kontenP9";
 import NavbarHome from "../../components/navbar/navbarHome";
 
 const Home = () => {
@@ -64,6 +65,12 @@ const Home = () => {
         <KontenP8/>
       </div>
       {/* Halaman 8 End */}
+
+      {/* Halaman 9 Start */}
+      <div>
+        <KontenP9/>
+      </div>
+      {/* Halaman 9 End */}
     </div>
   );
 };
