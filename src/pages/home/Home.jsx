@@ -1,7 +1,8 @@
 import KontenLD from "../../components/kontenLD/kontenLD";
 import KontenP2 from "../../components/kontenP2/KontenP2";
 import KontenP3 from "../../components/KontenP3/KontenP3";
-import Konten4 from "../../components/kontenP4/kontenP4";
+import KontenP4 from "../../components/kontenP4/kontenP4";
+import KontenP5 from "../../components/KontenP5/KontenP5";
 import NavbarHome from "../../components/navbar/navbarHome";
 
 const Home = () => {
@@ -30,11 +31,18 @@ const Home = () => {
         <KontenP3/>
       </div>
       {/* Halaman 3 End */}
+
       {/* Halaman 4 Start */}
       <div>
-        <Konten4/>
+        <KontenP4/>
       </div>
       {/* Halaman 4 End */}
+
+      {/* Halaman 5 Start */}
+      <div>
+        <KontenP5/>
+      </div>
+      {/* Halaman 5 End */}
     </div>
   );
 };

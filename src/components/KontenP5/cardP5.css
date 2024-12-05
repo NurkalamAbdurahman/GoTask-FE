@@ -1,0 +1,35 @@
+.inverted-radius {
+  --r: 25px; 
+  --s: 40px; 
+  
+  aspect-ratio: 1;
+  background: #fff;
+  border-radius: var(--r);
+  --_m:/calc(2*var(--r)) calc(2*var(--r))
+    radial-gradient(#000 70%,#0000 72%) no-repeat;
+  mask:
+    calc(var(--s) + var(--r)) 0 var(--_m),
+    0 calc(var(--s) + var(--r)) var(--_m),
+    radial-gradient(var(--s) at 0 0,#0000 99%,#000 101%) 
+     var(--r) var(--r) no-repeat,
+    conic-gradient(at calc(var(--s) + 2*var(--r)) calc(var(--s) + 2*var(--r)),
+     #000 75%,#0000 0);
+}
+
+.inner-curves {
+  --r: 20px; 
+  --s: 45px; 
+  --a: 2deg; 
+
+  aspect-ratio: 1;
+  background: #fff;
+  border-radius: var(--r);
+  --_m:0/calc(2*var(--r)) var(--r) no-repeat
+    radial-gradient(50% 100% at bottom,#000 calc(100% - 1px),#0000);
+  --_d:(var(--s) + var(--r))*cos(var(--a));
+  mask:
+    calc(50% + var(--_d)) var(--_m),calc(50% - var(--_d)) var(--_m),
+    radial-gradient(var(--s) at 50% calc(-1*sin(var(--a))*var(--s)),
+      #0000 100%,#000 calc(100% + 1px)) 0 calc(var(--r)*(1 - sin(var(--a)))) no-repeat,
+    linear-gradient(90deg,#000 calc(50% - var(--_d)),#0000 0 calc(50% + var(--_d)),#000 0);
+}

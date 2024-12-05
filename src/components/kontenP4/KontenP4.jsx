@@ -2,7 +2,7 @@ import CardP4 from "./cardP4";
 
 const Konten4 = () => {
   return (
-    <div className="bg-latar-blue h-screen text-white gap-10 flex flex-col py-10 px-20">
+    <div className="bg-latar-blue  text-white gap-10 flex flex-col py-10 px-20">
       <div className="flex justify-between items-end">
         <div className="flex flex-col">
           <p className="text-base">GoTask Waktu</p>
