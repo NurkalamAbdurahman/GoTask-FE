@@ -1,4 +1,4 @@
-import Logo from "../../assets/images/icon/GoTask.png" 
+import Logo from "../../assets/images/icon/GoTask.png";
 const NavbarHome = () => {
   return (
     <div>

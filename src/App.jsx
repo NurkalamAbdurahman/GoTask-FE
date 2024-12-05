@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/home";
 import Dasboard from "./pages/dasboard/dasboard";
-import NotFound from "./pages/notFound/notFound";
+import NotFound from "./pages/notFound/NotFound";
 const App = () => {
   return (
     <Router>

@@ -1,5 +1,6 @@
 import KontenLD from "../../components/kontenLD/kontenLD";
 import KontenP2 from "../../components/kontenP2/KomtemP2";
+import KontenP3 from "../../components/KontenP3/KontenP3";
 import NavbarHome from "../../components/navbar/navbarHome";
 
 const Home = () => {
@@ -22,6 +23,12 @@ const Home = () => {
         <KontenP2/>
       </div>
       {/* Halaman 2 End */}
+
+      {/* Halaman 3 Start */}
+      <div>
+        <KontenP3/>
+      </div>
+      {/* Halaman 3 End */}
     </div>
   );
 };

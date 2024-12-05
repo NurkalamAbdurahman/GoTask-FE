@@ -24,7 +24,7 @@ const KontenP2 = () => {
         </div>
       </div>
       <div>
-        <CardP2/>
+        <CardP2 />
       </div>
     </div>
   );

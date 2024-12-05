@@ -1,0 +1,19 @@
+.inner-curve {
+  --r: 5px; 
+  --s: 30px;  
+  --a: 20deg;
+
+  width: 100%;
+  height: 50px;
+  aspect-ratio: 1;
+  background: #0F4C75;
+  border-radius: var(--r);
+  --_m:100%/calc(2*var(--r)) var(--r) no-repeat
+    radial-gradient(50% 100% at top,#000 calc(100% - 1px),#0000);
+  --_d:(var(--s) + var(--r))*cos(var(--a));
+  mask:
+    calc(50% + var(--_d)) var(--_m),calc(50% - var(--_d)) var(--_m),
+    radial-gradient(var(--s) at 50% calc(100% + sin(var(--a))*var(--s)),
+      #0000 100%,#000 calc(100% + 1px)) 0 calc(var(--r)*(sin(var(--a)) - 1)) no-repeat,
+    linear-gradient(90deg,#000 calc(50% - var(--_d)),#0000 0 calc(50% + var(--_d)),#000 0);
+}
