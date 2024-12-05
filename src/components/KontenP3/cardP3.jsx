@@ -102,7 +102,7 @@ const CardP3 = () => {
           <div className="bg-secondary-blue w-12 h-5"></div>
           <div className="bg-secondary-blue w-20 h-5"></div>
         </div>
-        <div className="flex border-solid border-2 border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg">
+        <div className="flex border-solid border-2 p-1 border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg">
           <button
             onClick={handleNext}
             className={`px-4 py- 2 rounded-md ${

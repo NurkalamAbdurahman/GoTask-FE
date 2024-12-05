@@ -79,32 +79,32 @@ const CardP2 = () => {
 
   return (
     <div className="flex gap-5 flex-col justify-center items-center">
-      <div className="border-solid border-2 rounded-lg border-primary-blue">
+      <div className="border-solid border-2 p-1 rounded-lg bg-secondary-blue bg-opacity-10 border-primary-blue">
         <button
-          className={`rounded-md w-[395px] py-2 ${
+          className={`rounded-md w-[385px] py-2 ${
             activeView === "board"
-              ? "bg-blue-500"
-              : "bg-secondary-blue bg-opacity-10"
+              ? "bg-secondary-blue"
+              : "text-white"
           }`}
           onClick={() => setActiveView("board")}
         >
           Board
         </button>
         <button
-          className={`rounded-md w-[395px] py-2 ${
+          className={`rounded-md w-[385px] py-2 ${
             activeView === "list"
-              ? "bg-blue-500"
-              : "bg-secondary-blue bg-opacity-10"
+              ? "bg-secondary-blue"
+              : "text-white"
           }`}
           onClick={() => setActiveView("list")}
         >
           List
         </button>
         <button
-          className={`rounded-md w-[395px] py-2 ${
+          className={`rounded-md w-[385px] py-2 ${
             activeView === "card"
-              ? "bg-blue-500"
-              : "bg-secondary-blue bg-opacity-10"
+              ? "bg-secondary-blue"
+              : "text-white"
           }`}
           onClick={() => setActiveView("card")}
         >
