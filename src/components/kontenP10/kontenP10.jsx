@@ -5,7 +5,7 @@ const KontenP10 = () => {
     <div className="bg-latar-blue text-white justify-center items-center gap-5 flex py-10 px-20">
       <div className="bg-secondary-blue bg-opacity-10 flex justify-center items-center border-solid border-primary-blue border gap-4 p-10 rounded-lg bg-blur-sm ">
         <img src={GrubKanan} alt="" />
-        <div className="text-center flex flex-col justify-center items-center">
+        <div className="text-center flex flex-col gap-8 justify-center items-center">
           <p className="font-bold text-4xl">Mulailah dengan GoTask hari ini</p>
           <p className="text-md">
             Ingin mengoptimalkan waktu dan meningkatkan efisiensi kerja Anda?

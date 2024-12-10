@@ -1,3 +1,4 @@
+import Footer from "../../components/footer/footer";
 import KontenLD from "../../components/kontenLD/kontenLD";
 import KontenP10 from "../../components/kontenP10/kontenP10";
 import KontenP2 from "../../components/kontenP2/KontenP2";
@@ -78,6 +79,12 @@ const Home = () => {
         <KontenP10/>
       </div>
       {/* Halaman 10 End */}
+
+      {/* Footer Start */}
+      <div>
+        <Footer/>
+      </div>
+      {/* Footer End */}
     </div>
   );
 };
