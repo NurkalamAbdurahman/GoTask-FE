@@ -1,11 +1,12 @@
-import NavbarHome from "../../components/navbar/navbarHome";
+import SiderBar from "../../components/sidebar/sidebar";
 
 const Dasboard = () => {
   return (
-    <>
-      <NavbarHome />
-      <h1>Halaman Dasboard</h1>
-    </>
+    <div className="bg-latar-blue text-white">
+      <div>
+        <SiderBar/>
+      </div>
+    </div>
   );
 };
 

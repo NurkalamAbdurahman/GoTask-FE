@@ -2,7 +2,7 @@ import CardP2 from "./cardP2";
 
 const KontenP2 = () => {
   return (
-    <div className="bg-latar-blue text-white gap-5 flex flex-col py-10 px-20">
+    <div className="bg-latar-blue text-white gap-5 flex flex-col p-20">
       <div className="flex justify-between items-start">
         <div className="flex flex-col">
           <p className="text-base">GoTask 101</p>

@@ -4,7 +4,7 @@ import ItClub from "../../assets/images/icon/jItClub.png";
 import X from "../../assets/images/icon/x.png";
 const KontenP8 = () => {
   return (
-    <div className="bg-latar-blue text-white justify-center items-center gap-10 flex flex-col py-10">
+    <div className="bg-latar-blue text-white justify-center items-center gap-10 flex flex-col p-20">
     <div className="justify-between items-center flex gap-10">
       <div className="flex flex-col gap-5 justify-between items-start">
         <div className="flex gap-3 flex-col">

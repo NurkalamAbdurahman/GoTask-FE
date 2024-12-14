@@ -2,7 +2,7 @@ import CardP7 from "./cardP7";
 
 const KontenP7 = () => {
   return (
-    <div className="bg-latar-blue text-white gap-5 flex flex-col py-10 px-20">
+    <div className="bg-latar-blue text-white gap-5 flex flex-col p-20">
       <div className="flex justify-center items-center text-center">
         <div className="flex flex-col gap-2">
           <p className="text-base">GoTask Beraksi</p>

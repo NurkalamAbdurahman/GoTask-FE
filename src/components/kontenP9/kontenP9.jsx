@@ -58,7 +58,7 @@ const KontenP9 = () => {
   const currentComment = comments[currentIndex];
 
   return (
-    <div className="bg-latar-blue text-white justify-center items-end gap-5 flex flex-col py-10 px-20">
+    <div className="bg-latar-blue text-white justify-center items-end gap-5 flex flex-col p-20">
       <div className="flex flex-col gap-10">
         <div className="flex justify-start items-start">
           <img src={Logo} alt="GoTask Logo" />

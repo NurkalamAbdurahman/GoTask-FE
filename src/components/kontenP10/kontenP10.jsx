@@ -2,7 +2,7 @@ import GrubKanan from "../../assets/images/icon/Group 81.png";
 import GrubKiri from "../../assets/images/icon/Group 82.png";
 const KontenP10 = () => {
   return (
-    <div className="bg-latar-blue text-white justify-center items-center gap-5 flex py-10 px-20">
+    <div className="bg-latar-blue text-white justify-center items-center gap-5 flex p-20">
       <div className="bg-secondary-blue bg-opacity-10 flex justify-center items-center border-solid border-primary-blue border gap-4 p-10 rounded-lg bg-blur-sm ">
         <img src={GrubKanan} alt="" />
         <div className="text-center flex flex-col gap-8 justify-center items-center">
