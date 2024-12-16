@@ -75,7 +75,8 @@ const CardRegister = () => {
 
           <div className="flex justify-center col-span-2 items-center">
             <button className="bg-primary-blue px-5 py-2 rounded-lg mt-5 self-center">
-              Masuk
+              <a href="/Login"></a>
+              Daftar
             </button>
           </div>
         </form>

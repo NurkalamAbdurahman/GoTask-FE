@@ -5,7 +5,9 @@ import ImgLogin from "../../components/kontenLogin/ImgLogin";
 const Login = () => {
   return (
     <div className="bg-latar-blue h-screen text-white p-10">
-      <img src={Logo} alt="GoTask Logo" className="mb-8" />
+      <a href="/">
+        <img src={Logo} alt="GoTask Logo" className="mb-8" />
+      </a>
       <div className="flex justify-between items-center">
         <div className="w-1/2 flex justify-center">
           <CardLogin />

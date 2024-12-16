@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dasboard from "./pages/dasboard/dasboard";
 import NotFound from "./pages/notFound/NotFound";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Home from "./pages/home/Home";
+import Dasboard from "./pages/dasboard/Dasboard";
 const App = () => {
   return (
     <Router>

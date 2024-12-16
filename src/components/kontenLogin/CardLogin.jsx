@@ -7,7 +7,8 @@ const CardLogin = () => {
             Login<span className="text-secondary-blue">.</span>
           </h1>
           <p className="text-base">
-            Akses dunia Anda dalam genggaman. Login sekarang dan kendalikan tugas Anda dengan mudah!
+            Akses dunia Anda dalam genggaman. Login sekarang dan kendalikan
+            tugas Anda dengan mudah!
           </p>
         </div>
 
@@ -31,15 +32,18 @@ const CardLogin = () => {
               required
             />
             <label className="text-sm">
-              Tidak punya akun?{' '}
-              <a href="/Register" className="link link-hover text-secondary-blue">
+              Tidak punya akun?{" "}
+              <a
+                href="/Register"
+                className="link link-hover text-secondary-blue"
+              >
                 Register
               </a>
             </label>
           </div>
 
           <button className="bg-primary-blue px-5 py-2 rounded-lg mt-5 self-center">
-            Masuk
+            <a href="/Dasboard">Masuk</a>
           </button>
         </form>
       </div>

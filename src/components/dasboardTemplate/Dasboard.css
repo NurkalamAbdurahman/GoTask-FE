@@ -1,0 +1,56 @@
+.inner-dasboard {
+  --r: 20px;  
+  --s: 40px;  
+  --a: 20deg; 
+
+  width: 100%;
+  aspect-ratio: 1;
+  background: #ED303C;
+  border-radius: var(--r);
+  --_m:/var(--r) calc(2*var(--r)) no-repeat
+    radial-gradient(100% 50% at left,#000 calc(100% - 1px),#0000);
+  --_d:(var(--s) + var(--r))*cos(var(--a));
+  mask:
+    100% calc(50% + var(--_d)) var(--_m),100% calc(50% - var(--_d)) var(--_m),
+    radial-gradient(var(--s) at calc(100% + sin(var(--a))*var(--s)) 50% ,
+      #0000 100%,#000 calc(100% + 1px)) calc(var(--r)*(sin(var(--a)) - 1)) 0 no-repeat,
+    linear-gradient(#000 calc(50% - var(--_d)),#0000 0 calc(50% + var(--_d)),#000 0);
+}
+
+.inverted-profil {
+  --r: 25px; 
+  --s: 40px; 
+  
+  width: 50%;
+  aspect-ratio: 1;
+  background: #3FB8AF;
+  border-radius: var(--r);
+  --_m:/calc(2*var(--r)) calc(2*var(--r))
+    radial-gradient(#000 70%,#0000 72%) no-repeat;
+  mask:
+    calc(var(--s) + var(--r)) bottom var(--_m),
+    bottom calc(var(--s) + var(--r)) left 0 var(--_m),
+    radial-gradient(var(--s) at 0 100%,#0000 99%,#000 101%) 
+     var(--r) calc(-1*var(--r)) no-repeat,
+    conic-gradient(from 180deg at calc(var(--s) + 2*var(--r)) calc(100% - var(--s) - 2*var(--r)),
+     #0000 25%,#000 0);
+}
+
+.inverted-search {
+  --r: 25px; 
+  --s: 40px; 
+  
+  width: 50%;
+  aspect-ratio: 1;
+  background: #3FB8AF;
+  border-radius: var(--r);
+  --_m:/calc(2*var(--r)) calc(2*var(--r))
+    radial-gradient(#000 70%,#0000 72%) no-repeat;
+  mask:
+    calc(var(--s) + var(--r)) 0 var(--_m),
+    0 calc(var(--s) + var(--r)) var(--_m),
+    radial-gradient(var(--s) at 0 0,#0000 99%,#000 101%) 
+     var(--r) var(--r) no-repeat,
+    conic-gradient(at calc(var(--s) + 2*var(--r)) calc(var(--s) + 2*var(--r)),
+     #000 75%,#0000 0);
+}
