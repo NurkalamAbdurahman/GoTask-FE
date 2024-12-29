@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Colab from "../../assets/images/icon/colab.png";
-import Arrow from "../../assets/images/icon/arrowP3.png";
+import Colab from "../../../assets/images/icon/colab.png";
+import Arrow from "../../../assets/images/icon/arrowP3.png";
 import "./cardP3.css";
 
 const CardP3 = () => {

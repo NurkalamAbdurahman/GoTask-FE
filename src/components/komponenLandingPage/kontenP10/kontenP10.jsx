@@ -1,5 +1,5 @@
-import GrubKanan from "../../assets/images/icon/Group 81.png";
-import GrubKiri from "../../assets/images/icon/Group 82.png";
+import GrubKanan from "../../../assets/images/icon/Group 81.png";
+import GrubKiri from "../../../assets/images/icon/Group 82.png";
 const KontenP10 = () => {
   return (
     <div className="bg-latar-blue text-white justify-center items-center gap-5 flex p-20">

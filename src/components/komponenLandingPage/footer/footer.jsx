@@ -1,4 +1,4 @@
-import Logo from "../../assets/images/icon/GoTask.png";
+import Logo from "../../../assets/images/icon/GoTask.png";
 const Footer = () => {
   return (
     <div className="bg-latar-blue flex justify-center flex-col text-white items-center">

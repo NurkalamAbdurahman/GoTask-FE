@@ -1,0 +1,48 @@
+.inverted-KC {
+  --r: 5px;
+  --s: 27px;
+
+  height: 550px;
+  box-sizing: border-box;
+  border: 2px solid #0f4c75;
+  aspect-ratio: 1;
+  background: rgba(15, 76, 117, 0.5);
+  border-radius: var(--r);
+  --_m: /calc(2 * var(--r)) calc(2 * var(--r)) radial-gradient(
+      #000 70%,
+      #0000 72%
+    ) no-repeat;
+  mask: right calc(var(--s) + var(--r)) top 0 var(--_m),
+    right calc(var(--s) + var(--r)) var(--_m),
+    radial-gradient(var(--s) at 100% 0, #0000 99%, #000 101%)
+      calc(-1 * var(--r)) var(--r) no-repeat,
+    conic-gradient(
+      at calc(100% - var(--s) - 2 * var(--r)) calc(var(--s) + 2 * var(--r)),
+      #0000 25%,
+      #000 0
+    );
+}
+
+.inverted-C {
+  --r: 5px;
+  --s: 27px;
+
+  height: 550px;
+  border: 2px solid #0f4c75;
+  aspect-ratio: 1;
+  background: rgba(15, 76, 117, 0.5);
+  border-radius: var(--r);
+  --_m: /calc(2 * var(--r)) calc(2 * var(--r)) radial-gradient(
+      #000 70%,
+      #0000 72%
+    ) no-repeat;
+  mask: calc(var(--s) + var(--r)) 0 var(--_m),
+    0 calc(var(--s) + var(--r)) var(--_m),
+    radial-gradient(var(--s) at 0 0, #0000 99%, #000 101%) var(--r) var(--r)
+      no-repeat,
+    conic-gradient(
+      at calc(var(--s) + 2 * var(--r)) calc(var(--s) + 2 * var(--r)),
+      #000 75%,
+      #0000 0
+    );
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Logo from "../../assets/images/icon/GoTask.png";
-import Arrow from "../../assets/images/icon/arrowP3.png";
+import Logo from "../../../assets/images/icon/GoTask.png";
+import Arrow from "../../../assets/images/icon/arrowP3.png";
 
 const comments = [
   {

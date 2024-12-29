@@ -1,4 +1,4 @@
-import Logo from "../../assets/images/icon/mediasi.png";
+import Logo from "../../../assets/images/icon/mediasi.png";
 import "./cardP5.css";
 const CardP5 = () => {
   return (

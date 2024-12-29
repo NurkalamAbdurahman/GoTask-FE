@@ -1,5 +1,5 @@
 import Logo from "../../assets/images/icon/GoTask.png";
-import ImgLogin from "../../components/kontenLogin/ImgLogin";
+import ImgLogin from "../../components/komponenLandingPage/kontenLogin/ImgLogin";
 import CardRegister from "../../components/konternRegister/cardRegister";
 
 const Register = () => {

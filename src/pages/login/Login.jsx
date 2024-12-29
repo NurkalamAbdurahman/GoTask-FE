@@ -1,6 +1,6 @@
 import Logo from "../../assets/images/icon/GoTask.png";
-import CardLogin from "../../components/kontenLogin/CardLogin";
-import ImgLogin from "../../components/kontenLogin/ImgLogin";
+import CardLogin from "../../components/komponenLandingPage/kontenLogin/CardLogin";
+import ImgLogin from "../../components/komponenLandingPage/kontenLogin/ImgLogin";
 
 const Login = () => {
   return (

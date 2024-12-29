@@ -1,5 +1,5 @@
 import CardLD from "./cardLD";
-import Arrow from "../../assets/images/icon/arrowP3.png"
+import Arrow from "../../../assets/images/icon/arrowP3.png"
 const KontenLD = () => {
   return (
     <div className="hero min-h-screen bg-hero-pattern gap-4 flex flex-col justify-center items-center text-white">

@@ -1,7 +1,7 @@
 import CardP8 from "./cardP8";
-import GoTask from "../../assets/images/icon/jGoTask.png";
-import ItClub from "../../assets/images/icon/jItClub.png";
-import X from "../../assets/images/icon/x.png";
+import GoTask from "../../../assets/images/icon/jGoTask.png";
+import ItClub from "../../../assets/images/icon/jItClub.png";
+import X from "../../../assets/images/icon/x.png";
 const KontenP8 = () => {
   return (
     <div className="bg-latar-blue text-white justify-center items-center gap-10 flex flex-col p-20">
