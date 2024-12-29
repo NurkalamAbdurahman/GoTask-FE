@@ -1,4 +1,5 @@
 import "./ImgLogin.css";
+
 const ImgLogin = () => {
   const imageUrl =
     "https://images.unsplash.com/photo-1698047682129-c3e217ac08b7?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -11,13 +12,13 @@ const ImgLogin = () => {
       }}
     >
       <div className="inverted-radius-bl w-full bg-opacity-70">
-        <p className="lg:text-xl lg:p-10 md:p-4 md:w-11/12 font-normal">
+        <p className="lg:text-xl lg:p-10 md:p-4 md:w-11/12 font-normal 2xl:text-2xl">
           Dengan setiap tugas yang kamu selesaikan, kamu semakin dekat dengan
           tujuanmu. Jangan pernah menyerah, teruslah belajar dan berkembang.
         </p>
       </div>
       <div className="p-4 bg-primary-blue rounded-full absolute">
-        <p className="font-bold">01</p>
+        <p className="font-bold text-2xl">01</p>
       </div>
     </div>
   );

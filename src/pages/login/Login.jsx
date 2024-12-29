@@ -4,7 +4,7 @@ import ImgLogin from "../../components/komponenLandingPage/kontenLogin/ImgLogin"
 
 const Login = () => {
   return (
-    <div className="bg-latar-blue lg:h-screen h-screen md:h-auto text-white p-5 md:p-10">
+    <div className="bg-latar-blue lg:h-screen md:h-auto text-white p-5 md:p-10">
       <div className="md:h-1/4 lg:h-auto">
       <a href="/">
         <img src={Logo} alt="GoTask Logo" className="mb-8" />
