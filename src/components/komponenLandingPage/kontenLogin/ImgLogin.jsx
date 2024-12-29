@@ -5,13 +5,13 @@ const ImgLogin = () => {
 
   return (
     <div
-      className="h-[550px] w-[500px] bg-cover rounded-lg flex flex-col justify-end items-end p-8 relative"
+      className="lg:h-[550px] lg:w-full w-full lg:bg-cover rounded-lg flex flex-col justify-end items-end p-8 relative"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${imageUrl})`,
       }}
     >
-      <div className="inverted-radius-bl bg-opacity-70">
-        <p className="text-xl p-10 font-normal">
+      <div className="inverted-radius-bl w-full bg-opacity-70">
+        <p className="lg:text-xl lg:p-10 md:p-4 md:w-11/12 font-normal">
           Dengan setiap tugas yang kamu selesaikan, kamu semakin dekat dengan
           tujuanmu. Jangan pernah menyerah, teruslah belajar dan berkembang.
         </p>

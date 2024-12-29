@@ -1,12 +1,12 @@
 const CardLogin = () => {
   return (
-    <div className=" flex flex-col justify-center items-center">
-      <div className="card border-2 border-primary-blue bg-secondary-blue bg-opacity-10 p-8 rounded-lg shadow-2xl w-full max-w-sm">
+    <div className="flex flex-col justify-center items-center">
+      <div className="card border-2 border-primary-blue bg-secondary-blue bg-opacity-10 p-8 rounded-lg shadow-2xl w-full">
         <div className="text-center flex flex-col items-center gap-4">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-xl md:text-4xl font-bold">
             Login<span className="text-secondary-blue">.</span>
           </h1>
-          <p className="text-base">
+          <p className="text-sm md:text-base">
             Akses dunia Anda dalam genggaman. Login sekarang dan kendalikan
             tugas Anda dengan mudah!
           </p>
@@ -14,7 +14,7 @@ const CardLogin = () => {
 
         <form className="flex flex-col gap-4 mt-4">
           <div className="form-control flex flex-col gap-2">
-            <label className="label-text">Username</label>
+            <label className="label-text text-xs md:text-sm">Username</label>
             <input
               type="text"
               placeholder="Masukan username"
@@ -24,14 +24,14 @@ const CardLogin = () => {
           </div>
 
           <div className="form-control flex flex-col gap-2">
-            <label className="label-text">Password</label>
+            <label className="label-text text-xs md:text-sm">Password</label>
             <input
               type="password"
               placeholder="Masukan password"
               className="p-2 py-1 rounded-lg text-black"
               required
             />
-            <label className="text-sm">
+            <label className="text-xs md:text-sm">
               Tidak punya akun?{" "}
               <a
                 href="/Register"

@@ -4,15 +4,19 @@ import ImgLogin from "../../components/komponenLandingPage/kontenLogin/ImgLogin"
 
 const Login = () => {
   return (
-    <div className="bg-latar-blue h-screen text-white p-10">
+    <div className="bg-latar-blue lg:h-screen h-screen md:h-auto text-white p-5 md:p-10">
+      <div className="md:h-1/4 lg:h-auto">
       <a href="/">
         <img src={Logo} alt="GoTask Logo" className="mb-8" />
       </a>
-      <div className="flex justify-between items-center">
-        <div className="w-1/2 flex justify-center">
+      </div>
+      <div className="flex flex-col md:gap-2 md:h-3/4 lg:gap-10 lg:h-auto lg:flex-row justify-between items-center">
+        <div className="w-full lg:w-1/2 flex 2xl:h-full justify-center mb-8 md:mb-0">
           <CardLogin />
         </div>
-        <ImgLogin />
+        <div className="hidden md:block lg:flex lg:justify-end w-full lg:w-1/2">
+          <ImgLogin />
+        </div>
       </div>
     </div>
   );
