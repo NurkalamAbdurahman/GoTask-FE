@@ -1,7 +1,7 @@
 const CardLogin = () => {
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="card border-2 border-primary-blue bg-secondary-blue bg-opacity-10 p-8 rounded-lg shadow-2xl w-full">
+      <div className="card border-2 border-primary-blue bg-secondary-blue bg-opacity-10 p-8 rounded-lg shadow-2xl w-full lg:w-3/4">
         <div className="text-center flex flex-col items-center gap-4">
           <h1 className="text-xl md:text-4xl font-bold">
             Login<span className="text-secondary-blue">.</span>

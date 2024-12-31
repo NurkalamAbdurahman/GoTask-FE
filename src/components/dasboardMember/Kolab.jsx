@@ -6,42 +6,22 @@ const Kolab = () => {
     setActiveNav(navName);
   };
   return (
-    <div className="inverted-member flex gap-10 p-4">
-      <h3 className="w-1/4 font-semibold text-sm">KOLABOLATOR (2)</h3>
-      <ul className="w-3/4">
-        <li>
-          <a
-            href="#"
-            onClick={() => handleNavClick("Workspace members")}
-            className={`px-2 py-1 rounded text-xs hover:bg-secondary-blue ${
-              activeNav === "Workspace members" ? "bg-secondary-blue" : ""
-            }`}
-          >
-            Workspace members (2)
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            onClick={() => handleNavClick("Guests")}
-            className={`px-2 py-1 rounded text-xs hover:bg-secondary-blue ${
-              activeNav === "Guests" ? "bg-secondary-blue" : ""
-            }`}
-          >
-            Guests (1)
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            onClick={() => handleNavClick("Join requests")}
-            className={`px-2 py-1 rounded text-xs hover:bg-secondary-blue ${
-              activeNav === "Join requests" ? "bg-secondary-blue" : ""
-            }`}
-          >
-            Join requests (0)
-          </a>
-        </li>
+    <div className="inverted-member flex gap-4 lg:gap-10 p-4">
+      <h3 className="text-base sm:text-lg lg:text-xl font-semibold">KOLABOLATOR (2)</h3>
+      <ul className="flex flex-col lg:w-3/4">
+        {["Workspace members", "Guests", "Join requests"].map((navName, index) => (
+          <li key={index}>
+            <a
+              href="#"
+              onClick={() => handleNavClick(navName)}
+              className={`px-2 py-1 rounded text-xs sm:text-sm lg:text-base hover:bg-secondary-blue ${
+                activeNav === navName ? "bg-secondary-blue" : ""
+              }`}
+            >
+              {navName} ({index === 0 ? "2" : index === 1 ? "1" : "0"})
+            </a>
+          </li>
+        ))}
       </ul>
     </div>
   );

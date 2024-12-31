@@ -1,11 +1,10 @@
 import DasboardMember from "../../components/dasboardMember/DasboardMember";
-import SiderBar from "../../components/sidebar/sidebar";
-
+import Sidebar from "../../components/sidebar/Sidebar";
 const DasboardM = () => {
   return (
     <div className="bg-latar-blue text-white flex">
       <div>
-        <SiderBar/>
+        <Sidebar/>
       </div>
       <DasboardMember/>
     </div>

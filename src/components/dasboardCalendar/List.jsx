@@ -1,6 +1,6 @@
 const List = () => {
   return (
-    <div className=" text-white inverted-KC w-1/2 p-6">
+    <div className=" text-white inverted-KC w-full lg:w-1/2 p-6">
       <div className="text-left">
         <h1 className="text-xl">Sabtu</h1>
         <p className="text-2xl font-bold">19</p>

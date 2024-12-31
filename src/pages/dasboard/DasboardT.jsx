@@ -1,11 +1,11 @@
 import DasboardTable from "../../components/dasboardTable/DasboardTable";
-import SiderBar from "../../components/sidebar/sidebar";
+import Sidebar from "../../components/sidebar/Sidebar";
 
 const DasboardT = () => {
   return (
     <div className="bg-latar-blue text-white flex">
       <div>
-        <SiderBar/>
+        <Sidebar/>
       </div>
       <DasboardTable/>
     </div>

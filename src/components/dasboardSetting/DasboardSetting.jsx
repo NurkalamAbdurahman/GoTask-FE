@@ -3,9 +3,9 @@ import Setting from "./setting";
 
 const DasboardSetting = () => {
   return (
-    <div className="h-screen w-[100%] p-3 flex flex-col gap-2">
-      <div className="flex w-full relative justify-center items-center gap-2 ">
-        <div className="w-1/2">
+    <div className="lg:h-screen w-[100%] p-3 flex flex-col gap-2 py-5">
+      <div className="flex flex-col lg:flex-row w-full relative justify-center items-center gap-2 ">
+        <div className="w-full lg:w-1/2">
           <div className="inverted-member text-xs flex gap-4 p-4">
             <div className="w-2/3">
               <h3 className="text-sm font-semibold">Visibilitas ruang kerja</h3>
@@ -22,10 +22,10 @@ const DasboardSetting = () => {
             </div>
           </div>
         </div>
-        <div className="w-14 h-14 absolute -bottom-8 bg-primary-blue text-white rounded-full flex items-center justify-center text-2xl font-bold">
+        <div className="hidden w-14 h-14 absolute -bottom-8 bg-primary-blue text-white rounded-full lg:flex items-center justify-center text-2xl font-bold">
           G
         </div>
-        <div className="w-1/2 flex flex-col gap-2">
+        <div className="w-full lg:w-1/2 flex flex-col gap-2">
           <Profil />
         </div>
       </div>

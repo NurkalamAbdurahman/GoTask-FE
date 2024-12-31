@@ -65,7 +65,9 @@ const Sidebar = () => {
         <div className="flex items-center justify-between border-b border-primary-blue">
           {!isCollapsed && (
             <div className="p-4 text-2xl font-bold flex items-center">
-              <img src={Logo} alt="Logo" />
+              <NavLink to="/">
+                <img src={Logo} alt="Logo" />
+              </NavLink>
             </div>
           )}
           <button

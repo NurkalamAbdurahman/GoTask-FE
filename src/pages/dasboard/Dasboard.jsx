@@ -1,11 +1,11 @@
 import DasboardTemplate from "../../components/dasboardTemplate/DasboardTemplate";
-import SiderBar from "../../components/sidebar/sidebar";
+import Sidebar from "../../components/sidebar/Sidebar";
 
 const Dasboard = () => {
   return (
     <div className="bg-latar-blue text-white flex">
       <div>
-        <SiderBar/>
+        <Sidebar/>
       </div>
         <DasboardTemplate/>
     </div>

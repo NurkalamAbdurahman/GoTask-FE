@@ -26,7 +26,7 @@ const Calendar = () => {
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 
   return (
-    <div className="inverted-C text-white w-1/2 flex flex-col justify-between p-6 rounded-lg">
+    <div className="inverted-C text-white w-full lg:w-1/2 flex flex-col justify-between p-6 rounded-lg">
       <div className="flex justify-between items-center mb-6 border-b py-2">
         <h2 className="text-[14px] font-bold">
           {format(currentDate, "MMMM yyyy", { locale: idLocale })}

@@ -3,10 +3,10 @@ import FilterBar from "./filterBar";
 import Template from "./Template";
 const DasboardTemplate = () => {
   return (
-    <div className="h-screen w-[100%] p-3">
-      <div className="flex h-1/2 w-full relative justify-center items-center gap-2 ">
-        <div className="w-1/2">
-          <div className="inner-dasboard px-10 py-5">
+    <div className="lg:h-screen h-auto w-[100%] p-3">
+      <div className="flex lg:h-1/2 w-full lg:relative flex-col lg:flex-row justify-center items-center gap-2 ">
+        <div className="lg:w-1/2 w-full">
+          <div className="inner-dasboard w-full px-10 py-5">
             <h3 className="text-xl font-bold">Board</h3>
             <ul className="list-disc ps-10 py-4">
               <li className="pb-1">
@@ -26,10 +26,10 @@ const DasboardTemplate = () => {
             </a>
           </div>
         </div>
-        <div className="w-14 h-14 absolute top-[5.7rem] bg-primary-blue text-white rounded-full flex items-center justify-center text-2xl font-bold">
+        <div className="w-14 h-14 absolute hidden top-[5.7rem] bg-primary-blue text-white rounded-full lg:flex items-center justify-center text-2xl font-bold">
           G
         </div>
-        <div className="w-1/2 flex flex-col gap-2">
+        <div className="lg:w-1/2 flex flex-col w-full gap-2">
           <div className="inverted-profil flex justify-between items-center p-5">
             <div className="ml-4 w-1/2">
               <div className="text-xl font-bold">GoTask</div>

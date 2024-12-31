@@ -1,11 +1,11 @@
 import DasboardProyek from "../../components/dasboardProyek/DasboardProyek";
-import SiderBar from "../../components/sidebar/sidebar";
+import Sidebar from "../../components/sidebar/Sidebar";
 
 const DAsboardP = () => {
   return (
     <div className="bg-latar-blue text-white flex">
       <div>
-        <SiderBar />
+        <Sidebar/>
       </div>
       <div className="flex-1 overflow-hidden">
         <DasboardProyek />

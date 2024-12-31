@@ -1,11 +1,12 @@
 import DasboardCalendar from "../../components/dasboardCalendar/DasboardCalendar";
-import SiderBar from "../../components/sidebar/sidebar";
+import Sidebar from "../../components/sidebar/Sidebar";
+
 
 const DasboardT = () => {
   return (
     <div className="bg-latar-blue text-white flex">
       <div>
-        <SiderBar/>
+        <Sidebar/>
       </div>
       <div className="w-full overflow-hidden">
       <DasboardCalendar/>
