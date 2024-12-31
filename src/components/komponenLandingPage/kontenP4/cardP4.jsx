@@ -2,8 +2,8 @@ import "./cardP4.css";
 const CardP4 = () => {
   return (
     <div>
-      <div className="flex justify-center items-start gap-5">
-        <div className="card bg-secondary-blue bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg w-72 shadow-xl">
+      <div className="flex flex-wrap justify-center items-start gap-5">
+        <div className="card bg-secondary-blue w-full bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg lg:w-[23%] shadow-xl">
           <div
             className="flex-col relative hero h-36 rounded-lg text-white flex justify-center items-center bg-cover"
             style={{
@@ -30,7 +30,8 @@ const CardP4 = () => {
             </button>
           </div>
         </div>
-        <div className="card bg-secondary-blue bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg w-72 shadow-xl">
+
+        <div className="card bg-secondary-blue w-full bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg lg:w-[23%] shadow-xl">
           <div
             className="flex-col relative hero h-36 rounded-lg text-white flex justify-center items-center bg-cover"
             style={{
@@ -39,7 +40,7 @@ const CardP4 = () => {
             }}
           >
             <div className="rounded-tab absolute left-5 -bottom-1 font-medium uppercase px-5">
-              feature
+              FEATURE
             </div>
           </div>
           <div className="card-body p-7 flex flex-col gap-4">
@@ -57,7 +58,8 @@ const CardP4 = () => {
             </button>
           </div>
         </div>
-        <div className="card bg-secondary-blue bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg w-72 shadow-xl">
+
+        <div className="card bg-secondary-blue w-full bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg lg:w-[23%] shadow-xl">
           <div
             className="flex-col relative hero h-36 rounded-lg text-white flex justify-center items-center bg-cover"
             style={{
@@ -66,7 +68,7 @@ const CardP4 = () => {
             }}
           >
             <div className="rounded-tab absolute left-5 -bottom-1 font-medium uppercase px-5">
-              solution
+              SOLUTION
             </div>
           </div>
           <div className="card-body p-7 flex flex-col gap-4">
@@ -84,7 +86,8 @@ const CardP4 = () => {
             </button>
           </div>
         </div>
-        <div className="card bg-secondary-blue bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg w-72 shadow-xl">
+
+        <div className="card bg-secondary-blue w-full bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg lg:w-[23%] shadow-xl">
           <div
             className="flex-col relative hero h-36 rounded-lg text-white flex justify-center items-center bg-cover"
             style={{
@@ -93,7 +96,7 @@ const CardP4 = () => {
             }}
           >
             <div className="rounded-tab absolute left-5 -bottom-1 uppercase font-medium px-5">
-              Compare
+              COMPARE
             </div>
           </div>
           <div className="card-body p-7 flex flex-col gap-4">

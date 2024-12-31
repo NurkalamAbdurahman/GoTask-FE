@@ -5,23 +5,22 @@ import "./cardP3.css";
 
 const CardP3 = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [activeButton, setActiveButton] = useState("next"); // Set tombol 'next' aktif saat awal
+  const [activeButton, setActiveButton] = useState("next");
 
   const cards = [
     {
       title: "Kolaborasi Tanpa Batas",
       description:
-      "Agenda virtual: Buat agenda rapat yang jelas dan bagikan / sebarkan kepada semua anggota tim.",
+        "Agenda virtual: Buat agenda rapat yang jelas dan bagikan / sebarkan kepada semua anggota tim.",
       description2:
-         "Diskusi interaktif: Tambahkan komentar dan lampiran pada kartu untuk mendiskusikan ide.",
+        "Diskusi interaktif: Tambahkan komentar dan lampiran pada kartu untuk mendiskusikan ide.",
       image: Colab,
-
     },
     {
       title: "Kuasai Proyek Anda dari Awal hingga Akhir",
       description:
         "Visualisasikan: Lihat gambaran keseluruhan proyek Anda dengan mudah.",
-        description2:
+      description2:
         "Organisasi: Kelompokkan tugas-tugas ke dalam daftar yang berbeda (To Do, In Progress, Done). Prioritaskan: Tentukan tugas mana yang paling penting dan atur tenggat waktunya.",
       image: Colab,
     },
@@ -29,7 +28,7 @@ const CardP3 = () => {
       title: "Kembangkan Ide-Ide Brilian",
       description:
         "Kumpulkan ide: Buat papan khusus untuk mengumpulkan ide-ide baru dari semua anggota tim.",
-        description2:
+      description2:
         "Voting ide: Gunakan fitur voting untuk memilih ide terbaik.",
       image: Colab,
     },
@@ -37,24 +36,24 @@ const CardP3 = () => {
       title: "Tingkatkan Komunikasi Tim",
       description:
         "Gunakan alat komunikasi yang efektif untuk menjaga semua anggota tim tetap terhubung.",
-        description2:
-        "Voting ide: Gunakan fitur voting untuk memilih ide terbaik.",
+      description2:
+        "Pantau semua diskusi penting langsung di satu tempat tanpa kehilangan konteks.",
       image: Colab,
     },
     {
       title: "Manajemen Waktu yang Efektif",
       description:
         "Tetapkan tenggat waktu yang realistis dan gunakan alat manajemen waktu untuk meningkatkan produktivitas.",
-        description2:
-        "Organisasi: Kelompokkan tugas-tugas ke dalam daftar yang berbeda (To Do, In Progress, Done). Prioritaskan: Tentukan tugas mana yang paling penting dan atur tenggat waktunya.",
+      description2:
+        "Kelola jadwal harian Anda dengan fitur notifikasi yang memastikan semua tugas selesai tepat waktu.",
       image: Colab,
     },
     {
       title: "Analisis Kinerja Proyek",
       description:
         "Lakukan analisis berkala untuk mengevaluasi kemajuan proyek dan membuat penyesuaian yang diperlukan.",
-        description2:
-        "Voting ide: Gunakan fitur voting untuk memilih ide terbaik.",
+      description2:
+        "Gunakan laporan otomatis untuk memahami tren dan meningkatkan efisiensi tim.",
       image: Colab,
     },
   ];
@@ -72,12 +71,12 @@ const CardP3 = () => {
   };
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="flex justify-center items-start gap-5">
+    <div className="flex flex-col gap-6">
+      <div className="flex justify-center items-center flex-col lg:flex-row gap-6 lg:gap-10">
         {cards.slice(currentIndex, currentIndex + 3).map((card, index) => (
           <div
             key={index}
-            className="card bg-secondary-blue bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg w-80 shadow-xl"
+            className="card w-full bg-secondary-blue bg-opacity-10 border-solid border-2 border-primary-blue rounded-lg lg:w-80 shadow-xl"
           >
             <div className="relative flex-col flex justify-center items-center">
               <div className="inner-curve "></div>
@@ -87,40 +86,45 @@ const CardP3 = () => {
                 className="bg-secondary-blue -bottom-7 absolute p-2 rounded-full"
               />
             </div>
-            <div className="card-body p-10 flex flex-col gap-4">
-              <h2 className="card-title uppercase font-bold text-sm">
+            <div className="card-body p-6 md:p-10 flex flex-col gap-4">
+              <h2 className="card-title uppercase font-bold text-sm md:text-base">
                 {card.title}
               </h2>
-              <p className="text-[12px] text-justify">{card.description}</p>
-              <p className="text-[12px] text-justify">{card.description2}</p>
+              <p className="text-[12px] md:text-sm text-justify">
+                {card.description}
+              </p>
+              <p className="text-[12px] md:text-sm text-justify">
+                {card.description2}
+              </p>
             </div>
           </div>
         ))}
       </div>
+
       <div className="flex justify-between items-center">
-        <div className="gap-2 flex flex-col">
+        <div className="flex flex-col gap-2">
           <div className="bg-secondary-blue w-12 h-5"></div>
           <div className="bg-secondary-blue w-20 h-5"></div>
         </div>
-        <div className="flex border-solid border-2 p-1 border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg">
-          <button
-            onClick={handleNext}
-            className={`px-4 py- 2 rounded-md ${
-              activeButton === "next" ? "bg-blue-500" : ""
-            }`}
-          >
-            <img src={Arrow} alt="Next" />
-          </button>
+        <div className="flex gap-2">
           <button
             onClick={handlePrev}
-            className={`px-4 py-2 rounded-md ${
-              activeButton === "prev" ? "bg-blue-500" : ""
+            className={`w-8 h-8 p-2 flex justify-center items-center rounded-md border-2 ${
+              activeButton === "prev" ? "bg-blue-500" : "bg-secondary-blue"
             }`}
           >
-            <img className="rotate-180" src={Arrow} alt="Previous" />
+            <img src={Arrow} alt="Previous" />
+          </button>
+          <button
+            onClick={handleNext}
+            className={`w-8 h-8 p-2 flex justify-center items-center rounded-md border-2 ${
+              activeButton === "next" ? "bg-blue-500" : "bg-secondary-blue"
+            }`}
+          >
+            <img className="rotate-180" src={Arrow} alt="Next" />
           </button>
         </div>
-        <div className="gap-2 flex justify-end items-end flex-col">
+        <div className="flex flex-col gap-2">
           <div className="bg-secondary-blue w-12 h-5"></div>
           <div className="bg-secondary-blue w-20 h-5"></div>
         </div>

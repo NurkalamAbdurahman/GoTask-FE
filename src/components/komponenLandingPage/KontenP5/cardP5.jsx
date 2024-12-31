@@ -1,14 +1,15 @@
 import Logo from "../../../assets/images/icon/mediasi.png";
 import "./cardP5.css";
+
 const CardP5 = () => {
   return (
-    <div className="flex justify-center items-center gap-5">
-      <div className="flex flex-col justify-start items-start gap-5">
-        <div className="relative">
+    <div className="flex flex-col md:flex-row justify-center items-center gap-5">
+      <div className="flex flex-col justify-start items-start gap-5 w-full lg:w-1/2">
+        <div className="relative flex justify-start items-start w-full">
           <div className="bg-white w-14 h-14 rounded-full absolute flex justify-center items-center">
             <img src={Logo} alt="" />
           </div>
-          <div className="inverted-radius w-[500px] h-52">
+          <div className="inverted-radius w-full h-[250px]">
             <p className="text-black font-semibold text-md ps-24 p-5">
               Bekerja Sama Lebih Efisien
             </p>
@@ -22,11 +23,11 @@ const CardP5 = () => {
             </p>
           </div>
         </div>
-        <div className="relative">
+        <div className="relative flex justify-start items-start w-full">
           <div className="bg-white w-14 h-14 rounded-full absolute flex justify-center items-center">
             <img src={Logo} alt="" />
           </div>
-          <div className="inverted-radius w-[500px] h-52">
+          <div className="inverted-radius w-full h-[250px]">
             <p className="text-black font-semibold text-md ps-24 p-5">
               Bekerja Sama Lebih Efisien
             </p>
@@ -41,11 +42,11 @@ const CardP5 = () => {
           </div>
         </div>
       </div>
-      <div className="relative flex justify-center items-start">
+      <div className="relative flex justify-center items-start w-full md:w-1/2">
         <div className="bg-white w-14 h-14 rounded-full absolute flex justify-center items-center">
           <img src={Logo} alt="" />
         </div>
-        <div className="inner-curves pt-20 p-10 w-[500px] h-[430px]">
+        <div className="inner-curves pt-20 p-10 w-full h-[430px] lg:h-[500px]">
           <p className="text-black font-semibold text-md">
             Tingkatkan Kinerja Tim Anda
           </p>
