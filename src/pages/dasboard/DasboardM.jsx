@@ -1,15 +1,14 @@
-import DasboardTemplate from "../../components/dasboardTemplate/DasboardTemplate";
+import DasboardMember from "../../components/dasboardMember/DasboardMember";
 import Sidebar from "../../components/sidebar/Sidebar";
-
-const Dasboard = () => {
+const DasboardM = () => {
   return (
     <div className="bg-latar-blue text-white flex">
       <div>
         <Sidebar/>
       </div>
-        <DasboardTemplate/>
+      <DasboardMember/>
     </div>
   );
 };
 
-export default Dasboard;
+export default DasboardM;

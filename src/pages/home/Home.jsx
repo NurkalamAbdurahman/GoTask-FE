@@ -1,15 +1,15 @@
-import Footer from "../../components/footer/footer";
-import KontenLD from "../../components/kontenLD/kontenLD";
-import KontenP10 from "../../components/kontenP10/kontenP10";
-import KontenP2 from "../../components/kontenP2/KontenP2";
-import KontenP3 from "../../components/KontenP3/KontenP3";
-import KontenP4 from "../../components/kontenP4/kontenP4";
-import KontenP5 from "../../components/KontenP5/KontenP5";
-import KontenP6 from "../../components/kontenP6/KontenP6";
-import KontenP7 from "../../components/kontenP7/KontenP7";
-import KontenP8 from "../../components/kontenP8/KontenP8";
-import KontenP9 from "../../components/kontenP9/kontenP9";
-import NavbarHome from "../../components/navbar/navbarHome";
+import Footer from "../../components/komponenLandingPage/footer/footer";
+import KontenLD from "../../components/komponenLandingPage/kontenLD/kontenLD";
+import KontenP10 from "../../components/komponenLandingPage/kontenP10/kontenP10";
+import KontenP2 from "../../components/komponenLandingPage/kontenP2/KontenP2";
+import KontenP3 from "../../components/komponenLandingPage/KontenP3/KontenP3";
+import KontenP5 from "../../components/komponenLandingPage/KontenP5/KontenP5";
+import KontenP4 from "../../components/komponenLandingPage/kontenP4/KontenP4";
+import KontenP6 from "../../components/komponenLandingPage/kontenP6/KontenP6";
+import KontenP7 from "../../components/komponenLandingPage/kontenP7/KontenP7";
+import KontenP8 from "../../components/komponenLandingPage/kontenP8/KontenP8";
+import KontenP9 from "../../components/komponenLandingPage/kontenP9/kontenP9";
+import NavbarHome from "../../components/komponenLandingPage/navbar/NavbarHome";
 
 const Home = () => {
   return (

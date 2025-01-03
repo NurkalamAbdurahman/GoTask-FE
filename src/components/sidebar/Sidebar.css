@@ -11,3 +11,7 @@
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   background-color: darken(#0F4C75, 10%);
 }
+.custom-h-scroll::-webkit-scrollbar {
+  height: 6px;
+  background-color: transparent;
+}
