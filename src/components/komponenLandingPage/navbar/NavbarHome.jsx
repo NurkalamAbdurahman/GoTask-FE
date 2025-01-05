@@ -25,9 +25,9 @@ const NavbarHome = () => {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-screen-xl flex items-center justify-between mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-screen-xl flex items-center justify-between mx-auto py-4 sm:py-4 lg:py-8 px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center">
-          <img src={Logo} alt="GoTask Logo" className="h-8 w-auto" />
+          <img src={Logo} alt="GoTask Logo" className="h-10 w-auto" />
         </a>
 
         <div className="flex items-center space-x-4">
