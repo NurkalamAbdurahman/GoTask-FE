@@ -1,6 +1,6 @@
 import "./Dasboard.css";
-import Workspace from "./workspace";
-import Profil from "./profil";
+import Workspace from "./Workspace";
+import Profil from "./Profil";
 import Kolab from "./Kolab";
 const DasboardMember = () => {
   return (

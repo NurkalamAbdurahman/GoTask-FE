@@ -1,4 +1,4 @@
-import Profil from "../dasboardMember/profil";
+import Profil from "../dasboardMember/Profil";
 import KontenTable from "./KontenTable";
 import Table from "./Table";
 

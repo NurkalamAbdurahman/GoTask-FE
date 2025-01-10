@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FooterD from "./footerD";
+import FooterD from "./FooterD";
 
 const Board = () => {
   const Lists = ["Project Resources", "To Do", "Pending", "Blocked", "Done"];
@@ -26,6 +26,36 @@ const Board = () => {
       ],
       image:
         "https://images.unsplash.com/photo-1720048169707-a32d6dfca0b3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      text: "Looking for even more project management features?",
+      description:
+        "lorem insum heheheh? :')",
+    },
+    {
+      id: 3,
+      list: "Pending",
+      labels: [
+        { text: "Design Canva", color: "bg-green-700" },
+        { text: "Priority", color: "bg-red-700" },
+      ],
+      text: "Looking for even more project management features?",
+      description:
+        "lorem insum heheheh? :')",
+    },
+    {
+      id: 4,
+      list: "Blocked",
+      labels: [
+      ],
+      text: "Looking for even more project management features?",
+      description:
+        "lorem insum heheheh? :')",
+    },
+    {
+      id: 5,
+      list: "Done",
+      labels: [
+        { text: "Done", color: "bg-green-700" },
+      ],
       text: "Looking for even more project management features?",
       description:
         "lorem insum heheheh? :')",
@@ -139,10 +169,10 @@ const Board = () => {
 
       {showModal && selectedCard && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white text-black p-6 rounded-lg w-[600px] relative">
+          <div className="bg-latar-blue text-white p-6 rounded-lg w-[600px] relative">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-black"
+              className="absolute top-4 right-4 text-white text-white-700"
             >
               ✕
             </button>
@@ -162,7 +192,7 @@ const Board = () => {
                   </label>
                   <input
                     type="text"
-                    className="w-full border rounded px-4 py-2"
+                    className="w-full border rounded px-4 py-2 text-black"
                     placeholder="Masukkan URL gambar"
                     value={selectedCard.image}
                     onChange={(e) =>
@@ -180,7 +210,7 @@ const Board = () => {
                   </label>
                   <input
                     type="text"
-                    className="w-full border rounded px-4 py-2"
+                    className="w-full border rounded px-4 py-2 text-black"
                     value={selectedCard.text}
                     onChange={(e) =>
                       setSelectedCard((prev) => ({
@@ -220,7 +250,7 @@ const Board = () => {
                     Description
                   </h3>
                   <textarea
-                    className="w-full border rounded px-4 py-2 mt-2"
+                    className="w-full border rounded px-4 py-2 mt-2 text-black"
                     value={selectedCard.description}
                     onChange={(e) =>
                       setSelectedCard((prev) => ({
@@ -273,7 +303,7 @@ const Board = () => {
 
       {showLabelModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white text-black p-6 rounded-lg w-[400px] relative">
+          <div className="bg-latar-blue text-white p-6 rounded-lg w-[400px] relative">
             <button
               onClick={() => setShowLabelModal(false)}
               className="absolute top-4 right-4 text-gray-500 hover:text-black"
@@ -336,3 +366,4 @@ const Board = () => {
 };
 
 export default Board;
+
