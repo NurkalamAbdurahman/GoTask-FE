@@ -1,7 +1,7 @@
 const Template = () => {
   return (
-    <div className="flex flex-wrap justify-start lg:justify-between mt-5 lg:mt-0 items-center text-xs gap-5">
-      <div className="w-full sm:w-[48%] lg:w-[32%] border-2 p-4 border-primary-blue bg-secondary-blue bg-opacity-10 h-28 rounded-md">
+    <div className="flex flex-wrap justify-start mt-5 items-center text-xs gap-5 h-80 p-2 overflow-y-auto custom-scroll ">
+      <div className="w-full sm:w-[48%] md:w-[48%] xl:w-[31%] border-2 p-4 border-primary-blue bg-secondary-blue bg-opacity-10 h-28 rounded-md">
         <div className="h-3/4 flex justify-center text-xl items-center">
           <button>+</button>
         </div>
@@ -16,7 +16,7 @@ const Template = () => {
         { title: "Quiz App", gradient: "from-[#000000] to-[#0ad1b7]", members: "Dava & Wandi" },
         { title: "test App", gradient: "from-[#000000] to-[#456]", members: "? & ?" },
       ].map((card, index) => (
-        <div key={index} className="w-full sm:w-[48%] lg:w-[32%] flex flex-col gap-1">
+        <div key={index} className="w-full sm:w-[48%] md:w-[48%]  xl:w-[31%] flex flex-col gap-1">
           <div className={`w-full p-4 bg-gradient-to-r ${card.gradient} h-28 rounded-md`}>
             <div className="h-3/4 flex justify-end text-xl items-start">
               <button>+</button>

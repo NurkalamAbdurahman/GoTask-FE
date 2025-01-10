@@ -1,4 +1,4 @@
-import Profil from "../dasboardMember/profil";
+import Profil from "../dasboardMember/Profil";
 import FilterCalendar from "./FilterCalendar";
 import KontenCalendar from "./KontenCalendar";
 

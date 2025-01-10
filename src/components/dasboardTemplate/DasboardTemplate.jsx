@@ -4,7 +4,7 @@ import Template from "./Template";
 const DasboardTemplate = () => {
   return (
     <div className="lg:h-screen h-auto w-[100%] p-3">
-      <div className="flex lg:h-1/2 w-full lg:relative flex-col lg:flex-row justify-center items-center gap-2 ">
+      <div className="flex w-full lg:relative flex-col lg:flex-row justify-center items-center gap-2 ">
         <div className="lg:w-1/2 w-full">
           <div className="inner-dasboard w-full px-10 py-5">
             <h3 className="text-xl font-bold">Board</h3>
@@ -26,7 +26,7 @@ const DasboardTemplate = () => {
             </a>
           </div>
         </div>
-        <div className="w-14 h-14 absolute hidden top-[5.7rem] bg-primary-blue text-white rounded-full lg:flex items-center justify-center text-2xl font-bold">
+        <div className="w-14 h-14 absolute hidden top-[4.8rem] bg-primary-blue text-white rounded-full lg:flex items-center justify-center text-2xl font-bold">
           G
         </div>
         <div className="lg:w-1/2 flex flex-col w-full gap-2">

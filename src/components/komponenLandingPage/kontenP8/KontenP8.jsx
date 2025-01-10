@@ -1,4 +1,4 @@
-import CardP8 from "./CardP8";
+import CardP8 from "./cardP8";
 import GoTask from "../../../assets/images/icon/jGoTask.png";
 import ItClub from "../../../assets/images/icon/jItClub.png";
 import X from "../../../assets/images/icon/x.png";

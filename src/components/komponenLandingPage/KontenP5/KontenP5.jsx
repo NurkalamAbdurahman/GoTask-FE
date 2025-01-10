@@ -1,4 +1,4 @@
-import CardP5 from "./CardP5";
+import CardP5 from "./cardP5";
 
 const KontenP5 = () => {
   return (
