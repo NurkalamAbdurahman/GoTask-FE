@@ -4,7 +4,7 @@ import Table from "./Table";
 
 const DasboardTable = () => {
   return (
-    <div className="lg:h-screen w-[100%] p-3 flex flex-col gap-2 py-5">
+    <div className="lg:h-screen overflow-hidden w-[100%] 2xl:text-lg p-3 flex flex-col gap-2 py-5">
       <div className="flex w-full flex-col-reverse lg:flex-row relative justify-center items-center gap-2 ">
         <div className="w-full lg:w-1/2">
           <Table />

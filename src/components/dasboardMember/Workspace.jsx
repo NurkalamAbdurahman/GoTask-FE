@@ -1,10 +1,8 @@
 const Workspace = () => {
   return (
-    <div className="inner-member2 lg:h-[550px] flex flex-col gap-4 lg:p-5 p-5 py-7 ">
-      {/* Title */}
+    <div className="flex flex-col gap-4 lg:p-5 p-5 py-7 ">
       <h3 className="text-lg sm:text-xl lg:text-2xl font-bold">Workspace members (2)</h3>
 
-      {/* Section 1 */}
       <div className="flex flex-col lg:flex-row items-start gap-4 text-xs sm:text-sm lg:text-base justify-center border-b border-white py-4">
         <p className="lg:w-1/4 font-medium">Workspace members</p>
         <p className="lg:w-2/4">
@@ -17,7 +15,6 @@ const Workspace = () => {
         </div>
       </div>
 
-      {/* Section 2 */}
       <div className="flex flex-col lg:flex-row items-start gap-4 text-xs sm:text-sm lg:text-base justify-center border-b border-white py-4">
         <p className="lg:w-1/4 font-medium">Undang anggota untuk bergabung dengan Anda</p>
         <p className="lg:w-2/4">
@@ -31,7 +28,6 @@ const Workspace = () => {
         </div>
       </div>
 
-      {/* Filter Input */}
       <div>
         <input
           type="text"
@@ -39,8 +35,7 @@ const Workspace = () => {
           className="w-full px-5 py-1 border text-xs sm:text-sm border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg"
         />
       </div>
-
-      {/* User Card 1 */}
+    <div className="lg:h-28 lg:overflow-y-scroll">
       <div className="flex flex-col lg:flex-row justify-between items-center border-y border-white py-2 gap-4">
         <div className="flex gap-2 w-full lg:w-1/2">
           <div className="logo bg-yellow-600 w-9 h-9 flex justify-center items-center text-xs rounded-full">
@@ -64,7 +59,6 @@ const Workspace = () => {
         </div>
       </div>
 
-      {/* User Card 2 */}
       <div className="flex flex-col lg:flex-row justify-between items-center border-y border-white py-2 gap-4">
         <div className="flex gap-2 w-full lg:w-1/2">
           <div className="logo bg-green-600 w-9 h-9 flex justify-center items-center text-xs rounded-full">
@@ -87,6 +81,7 @@ const Workspace = () => {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

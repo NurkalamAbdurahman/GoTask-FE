@@ -1,9 +1,9 @@
 const KontenTable = () => {
   return (
-    <div className="inner-member2 text-sm flex flex-col gap-4 p-4 pt-10">
-      <h3 className="font-semibold text-sm sm:text-base lg:text-lg">Table</h3>
+    <div className="inner-member2 text-sm 2xl:text-lg flex flex-col gap-4 p-4 pt-10">
+      <h3 className="font-semibold text-sm sm:text-base lg:text-lg 2xl:text-2xl">Table</h3>
       <div className="overflow-x-auto custom-h-scroll">
-        <table className="table-auto border-collapse w-full text-sm text-left text-white-700">
+        <table className="table-auto border-collapse w-full text-sm 2xl:text-lg text-left text-white-700">
           <thead>
             <tr className="border-b border-gray-300 text-white">
               <th className="px-4 py-2 whitespace-nowrap">Card</th>

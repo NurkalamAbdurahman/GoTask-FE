@@ -26,14 +26,14 @@ const Calendar = () => {
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 
   return (
-    <div className="inverted-C text-white w-full lg:w-1/2 flex flex-col justify-between p-6 rounded-lg">
+    <div className=" text-white w-full lg:w-1/2 flex flex-col justify-between p-6 rounded-lg">
       <div className="flex justify-between items-center mb-6 border-b py-2">
-        <h2 className="text-[14px] font-bold">
+        <h2 className="text-[14px] font-bold 2xl:text-lg">
           {format(currentDate, "MMMM yyyy", { locale: idLocale })}
         </h2>
         <div className="flex items-center space-x-4">
           <button
-            className="text-sm bg-secondary-blue px-4 py-1 rounded"
+            className="text-sm 2xl:text-lg bg-secondary-blue px-4 py-1 rounded"
             onClick={handleToday}
           >
             Hari ini
@@ -41,7 +41,7 @@ const Calendar = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-4 text-[10px] text-center">
+      <div className="grid grid-cols-7 gap-4 text-[10px] text-center 2xl:text-lg">
         <div>Minggu</div>
         <div>Senin</div>
         <div>Selasa</div>
@@ -69,7 +69,7 @@ const Calendar = () => {
         ))}
       </div>
 
-      <div className="flex justify-between w-full gap-2 items-center mt-6">
+      <div className="flex justify-between w-full gap-2 items-center mt-6 2xl:text-lg">
         <button
           className="border border-secondary-blue text-white w-1/2 py-0.5 rounded"
           onClick={handlePreviousMonth}

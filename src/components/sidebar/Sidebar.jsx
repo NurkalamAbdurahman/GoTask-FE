@@ -64,14 +64,14 @@ const Sidebar = () => {
       >
         <div className="flex items-center justify-between border-b border-primary-blue">
           {!isCollapsed && (
-            <div className="p-4 text-2xl font-bold flex items-center">
+            <div className="p-4 text-2xl xl:text-4xl font-bold flex items-center">
               <NavLink to="/">
                 <img src={Logo} alt="Logo" />
               </NavLink>
             </div>
           )}
           <button
-            className="py-1 px-2 rounded text-white bg-secondary-blue text-sm hover:text-white m-2 focus:outline-none"
+            className="py-1 px-2 rounded text-white bg-secondary-blue text-sm hover:text-white m-2 xl:text-lg focus:outline-none"
             onClick={() => setIsCollapsed(!isCollapsed)}
           >
             {isCollapsed ? ">" : "<"}
@@ -92,7 +92,7 @@ const Sidebar = () => {
           <nav className={`${isCollapsed ? "px-0" : "px-4"} flex-1`}>
             <div className="mb-4">
               <h3
-                className={`font-bold uppercase text-sm mb-2 ${
+                className={`font-bold uppercase text-sm mb-2 xl:text-lg ${
                   isCollapsed ? "hidden" : "block"
                 }`}
               >
@@ -108,8 +108,8 @@ const Sidebar = () => {
                       }`
                     }
                   >
-                    <img src={Board} alt="" className="object-cover w-3" />
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <img src={Board} alt="" className="object-cover w-3 2xl:w-5" />
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Board
                     </span>
                   </NavLink>
@@ -123,8 +123,8 @@ const Sidebar = () => {
                       }`
                     }
                   >
-                    <img src={Member} alt="" className="object-cover w-3" />
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <img src={Member} alt="" className="object-cover w-3 2xl:w-5" />
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Member
                     </span>
                   </NavLink>
@@ -138,8 +138,8 @@ const Sidebar = () => {
                       }`
                     }
                   >
-                    <img src={Setting} alt="" className="object-cover w-3" />
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <img src={Setting} alt="" className="object-cover w-3 2xl:w-5" />
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Workspace settings
                     </span>
                   </NavLink>
@@ -149,7 +149,7 @@ const Sidebar = () => {
 
             <div className="mb-4">
               <h3
-                className={`font-bold uppercase text-sm mb-2 ${
+                className={`font-bold uppercase text-sm mb-2 xl:text-lg ${
                   isCollapsed ? "hidden" : "block"
                 } flex justify-between items-center`}
               >
@@ -168,8 +168,8 @@ const Sidebar = () => {
                       }`
                     }
                   >
-                    <img src={Table} alt="" className="object-cover w-3" />
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <img src={Table} alt="" className="object-cover w-3 2xl:w-5" />
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Table
                     </span>
                   </NavLink>
@@ -183,8 +183,8 @@ const Sidebar = () => {
                       }`
                     }
                   >
-                    <img src={Calendar} alt="" />
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <img src={Calendar} alt="" className="object-cover w-3 2xl:w-5" />
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Calendar
                     </span>
                   </NavLink>
@@ -193,7 +193,7 @@ const Sidebar = () => {
             </div>
             <div className="mb-4">
               <h3
-                className={`font-bold uppercase text-sm mb-2 ${
+                className={`font-bold uppercase text-sm mb-2 xl:text-lg ${
                   isCollapsed ? "hidden" : "block"
                 } flex justify-between items-center`}
               >
@@ -217,7 +217,7 @@ const Sidebar = () => {
                     }
                   >
                     <span className="bg-gradient-to-r from-[#000000] to-[#290036] w-4 h-4 rounded"></span>
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Project Management
                     </span>
                   </NavLink>
@@ -232,7 +232,7 @@ const Sidebar = () => {
                     }
                   >
                     <span className="bg-gradient-to-r from-[#DD08CF] to-[#1500D6] w-4 h-4 rounded"></span>
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Absen App
                     </span>
                   </NavLink>
@@ -247,7 +247,7 @@ const Sidebar = () => {
                     }
                   >
                     <span className="bg-gradient-to-r from-[#33a833] to-[#e6ff06] w-4 h-4 rounded"></span>
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Chat App
                     </span>
                   </NavLink>
@@ -262,7 +262,7 @@ const Sidebar = () => {
                     }
                   >
                     <span className="bg-gradient-to-r from-[#000000] to-[#0ad1b7] w-4 h-4 rounded"></span>
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    <span className={`xl:text-base ${isCollapsed ? "hidden" : "ml-2"}`}>
                       Quiz App
                     </span>
                   </NavLink>
@@ -274,7 +274,7 @@ const Sidebar = () => {
 
         {!isCollapsed && (
           <div>
-            <button className="w-full px-2 py-1 bg-red-700 rounded-lg hover:bg-red-900">
+            <button className="w-full px-2 py-1 bg-red-700 rounded-lg hover:bg-red-900 2xl:text-base">
               <a href="/Login">Logout</a>
             </button>
           </div>
