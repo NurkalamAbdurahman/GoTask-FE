@@ -6,7 +6,7 @@ const ImgLogin = () => {
 
   return (
     <div
-      className="lg:h-[550px] lg:w-full w-full lg:bg-cover rounded-lg flex flex-col justify-end items-end p-8 relative"
+      className="lg:h-[550px] 2xl:h-[750px] lg:w-full w-full lg:bg-cover rounded-lg flex flex-col justify-end items-end p-8 relative"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${imageUrl})`,
       }}

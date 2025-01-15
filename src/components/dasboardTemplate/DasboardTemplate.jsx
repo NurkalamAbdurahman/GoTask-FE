@@ -3,12 +3,12 @@ import FilterBar from "./filterBar";
 import Template from "./Template";
 const DasboardTemplate = () => {
   return (
-    <div className="lg:h-screen h-auto w-[100%] p-3">
+    <div className="lg:h-screen overflow-hidden h-auto w-[100%] p-3">
       <div className="flex w-full lg:relative flex-col lg:flex-row justify-center items-center gap-2 ">
         <div className="lg:w-1/2 w-full">
           <div className="inner-dasboard w-full px-10 py-5">
-            <h3 className="text-xl font-bold">Board</h3>
-            <ul className="list-disc ps-10 py-4">
+            <h3 className="text-xl font-bold 2xl:text-2xl">Board</h3>
+            <ul className="list-disc ps-10 py-4 2xl:text-lg">
               <li className="pb-1">
                 Tetap terorganisir: Semua tugasmu jadi lebih mudah dilacak.
               </li>
@@ -32,14 +32,14 @@ const DasboardTemplate = () => {
         <div className="lg:w-1/2 flex flex-col w-full gap-2">
           <div className="inverted-profil flex justify-between items-center p-5">
             <div className="ml-4 w-1/2">
-              <div className="text-xl font-bold">GoTask</div>
-              <div className="text-sm text-gray-400">Projek IT Club</div>
+              <div className="text-xl font-bold 2xl:text-2xl">GoTask</div>
+              <div className="text-sm text-gray-400 2xl:text-lg">Projek IT Club</div>
             </div>
             <div className="w-1/2 flex flex-col justify-center items-center gap-1">
-              <button className="w-full px-2 py-1 text-xs bg-secondary-blue rounded-lg hover:bg-primary-blue">
+              <button className="w-full px-2 py-1 text-xs 2xl:text-lg bg-secondary-blue rounded-lg hover:bg-primary-blue">
                 <a href="#">Private</a>
               </button>
-              <button className="w-full px-2 py-1 text-xs bg-secondary-blue rounded-lg hover:bg-primary-blue">
+              <button className="w-full px-2 py-1 text-xs 2xl:text-lg bg-secondary-blue rounded-lg hover:bg-primary-blue">
                 <a href="#">Invite Members</a>
               </button>
             </div>

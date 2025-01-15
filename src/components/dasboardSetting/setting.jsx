@@ -1,9 +1,9 @@
 const Setting = () => {
   return (
-    <div className="inner-member2 text-sm flex flex-col gap-4 p-4 pt-10">
+    <div className="inner-member2 text-sm 2xl:text-lg flex flex-col gap-4 p-4 pt-10">
       <div className="border-b border-white gap-4 flex-col lg:flex-row flex items-start p-4">
         <div className="lg:w-1/4">
-          <h3 className="text-sm font-semibold">
+          <h3 className="text-sm 2xl:text-lg font-semibold">
             Pembatasan keanggotaan ruang kerja
           </h3>
         </div>
@@ -20,7 +20,7 @@ const Setting = () => {
       </div>
       <div className="border-b border-white gap-4 flex-col lg:flex-row flex items-start p-4">
         <div className="lg:w-1/4">
-          <h3 className="text-sm font-semibold">
+          <h3 className="text-sm 2xl:text-lg font-semibold">
           Pembatasan penghapusan Board
           </h3>
         </div>
@@ -41,7 +41,7 @@ const Setting = () => {
       </div>
       <div className="border-b border-white gap-4 flex-col lg:flex-row flex items-start p-4">
         <div className="lg:w-1/4">
-          <h3 className="text-sm font-semibold">
+          <h3 className="text-sm 2xl:text-lg font-semibold">
             Pembatasan pembuatan anggota
           </h3>
         </div>
@@ -61,7 +61,7 @@ const Setting = () => {
       </div>
       <div className="border-b border-white gap-4 flex-col lg:flex-row flex items-start p-4">
         <div className="lg:w-1/4">
-          <h3 className="text-sm font-semibold">
+          <h3 className="text-sm 2xl:text-lg font-semibold">
           Berbagi board dengan tamu
           </h3>
         </div>

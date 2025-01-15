@@ -3,13 +3,13 @@ import Setting from "./setting";
 
 const DasboardSetting = () => {
   return (
-    <div className="lg:h-screen w-[100%] p-3 flex flex-col gap-2 py-5">
+    <div className="lg:h-screen overflow-hidden w-[100%] p-3 flex flex-col gap-2 py-5">
       <div className="flex flex-col lg:flex-row w-full relative justify-center items-center gap-2 ">
         <div className="w-full lg:w-1/2">
           <div className="inverted-member text-xs flex gap-4 p-4">
             <div className="w-2/3">
-              <h3 className="text-sm font-semibold">Visibilitas ruang kerja</h3>
-              <p>
+              <h3 className="text-sm 2xl:text-lg font-semibold">Visibilitas ruang kerja</h3>
+              <p className="2xl:text-lg">
                 <span>Private</span> – Ruang Kerja ini bersifat pribadi. Itu
                 tidak diindeks atau terlihat oleh orang-orang di luar Ruang
                 Kerja.

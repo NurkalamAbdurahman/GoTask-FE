@@ -4,7 +4,7 @@ import CardRegister from "../../components/konternRegister/cardRegister";
 
 const Register = () => {
   return (
-    <div className="bg-latar-blue lg:h-screen md:h-auto text-white p-5 md:p-10">
+    <div className="bg-latar-blue h-screen md:h-auto xl:h-screen text-white p-5 md:p-10">
       <div className="md:h-1/4 lg:h-auto">
         <a href="/">
           <img src={Logo} alt="GoTask Logo" className="mb-8" />

@@ -1,12 +1,12 @@
 const CardLogin = () => {
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="card border-2 border-primary-blue bg-secondary-blue bg-opacity-10 p-8 rounded-lg shadow-2xl w-full lg:w-3/4">
+      <div className="card border-2 border-primary-blue bg-secondary-blue bg-opacity-10 p-8 rounded-lg shadow-2xl w-full h lg:w-3/4">
         <div className="text-center flex flex-col items-center gap-4">
-          <h1 className="text-xl md:text-4xl font-bold">
+          <h1 className="text-xl md:text-4xl font-bold 2xl:text-6xl">
             Login<span className="text-secondary-blue">.</span>
           </h1>
-          <p className="text-sm md:text-base">
+          <p className="text-sm md:text-base 2xl:text-2xl">
             Akses dunia Anda dalam genggaman. Login sekarang dan kendalikan
             tugas Anda dengan mudah!
           </p>
@@ -14,24 +14,28 @@ const CardLogin = () => {
 
         <form className="flex flex-col gap-4 mt-4">
           <div className="form-control flex flex-col gap-2">
-            <label className="label-text text-xs md:text-sm">Username</label>
+            <label className="label-text text-xs md:text-sm 2xl:text-xl">
+              Username
+            </label>
             <input
               type="text"
               placeholder="Masukan username"
-              className="p-2 py-1 rounded-lg text-black"
+              className="p-2 py-1 rounded-lg text-black 2xl:text-xl"
               required
             />
           </div>
 
           <div className="form-control flex flex-col gap-2">
-            <label className="label-text text-xs md:text-sm">Password</label>
+            <label className="label-text text-xs md:text-sm 2xl:text-xl">
+              Password
+            </label>
             <input
               type="password"
               placeholder="Masukan password"
-              className="p-2 py-1 rounded-lg text-black"
+              className="p-2 py-1 rounded-lg text-black 2xl:text-xl"
               required
             />
-            <label className="text-xs md:text-sm">
+            <label className="text-xs md:text-sm 2xl:text-xl">
               Tidak punya akun?{" "}
               <a
                 href="/Register"
@@ -42,9 +46,11 @@ const CardLogin = () => {
             </label>
           </div>
 
-          <button className="bg-primary-blue px-5 py-2 rounded-lg mt-5 self-center">
-            <a href="/Dasboard">Masuk</a>
-          </button>
+          <a href="/Dasboard" className="2xl:text-xl bg-primary-blue px-5 py-2 rounded-lg mt-5 self-center">
+            <button>
+              Masuk
+            </button>
+          </a>
         </form>
       </div>
     </div>

@@ -4,7 +4,7 @@ import KontenCalendar from "./KontenCalendar";
 
 const DasboardCalendar = () => {
   return (
-    <div className="lg:h-screen w-full p-3 flex flex-col gap-2 py-5">
+    <div className="lg:h-screen overflow-hidden w-full p-3 flex flex-col gap-2 py-5 2xl:text-lg">
       <div className="flex flex-col lg:flex-row w-full relative justify-center items-center gap-2 ">
         <div className="w-full lg:w-1/2">
         <FilterCalendar/>
