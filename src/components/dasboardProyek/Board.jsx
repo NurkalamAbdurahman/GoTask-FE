@@ -318,7 +318,7 @@ const Board = () => {
               </label>
               <input
                 type="text"
-                className="w-full border rounded px-4 py-2"
+                className="w-full border rounded px-4 py-2 text-black"
                 value={newLabel.text}
                 onChange={(e) =>
                   setNewLabel({ ...newLabel, text: e.target.value })
@@ -331,7 +331,7 @@ const Board = () => {
                 Warna Label
               </label>
               <select
-                className="w-full border rounded px-4 py-2"
+                className="w-full border rounded px-4 py-2 text-black"
                 value={newLabel.color}
                 onChange={(e) =>
                   setNewLabel({ ...newLabel, color: e.target.value })
