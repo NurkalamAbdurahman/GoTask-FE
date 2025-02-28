@@ -19,7 +19,7 @@ const App = () => {
         <Route path="/Dasboard-Setting" element={<DasboardS />} />
         <Route path="/Dasboard-Table" element={<DasboardT />} />
         <Route path="/Dasboard-Calendar" element={<DasboardC/>} />
-        <Route path="/Dasboard-Proyek" element={<DasboardP/>} />
+        <Route path="/Dasboard-Proyek/:id" element={<DasboardP/>} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="*" element={<NotFound />} />

@@ -1,439 +1,478 @@
-import { useState } from "react";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { SortableItem } from "./SortableItem";
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import FooterD from "./FooterD";
-import ActionModal from "./ActionModal";
+import Swal from "sweetalert2";
+import {
+  getBoard,
+  createBoard,
+  deleteBoard,
+} from "../CRUD/Boards/boardService";
+import {
+  getCard,
+  createCard,
+  updateCard,
+  deleteCard,
+} from "../CRUD/Cards/cardService";
 
 const Board = () => {
-  const Lists = ["Project Resources", "To Do", "Pending", "Blocked", "Done"];
-  const [cards, setCards] = useState([
-    {
-      id: 1,
-      list: "Project Resources",
-      labels: [
-        { text: "Copy Label", color: "bg-yellow-700" },
-        { text: "Priority", color: "bg-red-700" },
-      ],
-      image:
-        "https://images.unsplash.com/photo-1720048169707-a32d6dfca0b3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      text: "Looking for even more project management features?",
-      description: "lorem insum heheheh? :')",
-    },
-    {
-      id: 2,
-      list: "To Do",
-      labels: [
-        { text: "Design Canva", color: "bg-green-700" },
-        { text: "Priority", color: "bg-red-700" },
-      ],
-      image:
-        "https://images.unsplash.com/photo-1720048169707-a32d6dfca0b3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      text: "Looking for even more project management features?",
-      description: "lorem insum heheheh? :')",
-    },
-    {
-      id: 3,
-      list: "Pending",
-      labels: [
-        { text: "Design Canva", color: "bg-green-700" },
-        { text: "Priority", color: "bg-red-700" },
-      ],
-      text: "Looking for even more project management features?",
-      description: "lorem insum heheheh? :')",
-    },
-    {
-      id: 4,
-      list: "Blocked",
-      labels: [],
-      text: "Looking for even more project management features?",
-      description: "lorem insum heheheh? :')",
-    },
-    {
-      id: 5,
-      list: "Done",
-      labels: [{ text: "Done", color: "bg-green-700" }],
-      text: "Looking for even more project management features?",
-      description: "lorem insum heheheh? :')",
-    },
-  ]);
+  const [lists, setLists] = useState([]);
+  const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error] = useState(null);
 
-  const [showModal, setShowModal] = useState(false);
-  const [showLabelModal, setShowLabelModal] = useState(false);
-  const [showActionModal, setShowActionModal] = useState(false); // State for ActionModal
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [newLabel, setNewLabel] = useState({ text: "", color: "bg-gray-700" });
+  const workspaceId = localStorage.getItem("workspaceId");
+  const token = localStorage.getItem("token");
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  // Menyimpan ID board ke localStorage
+  const saveBoardIdToLocalStorage = (id) => {
+    const existingBoardIds = JSON.parse(localStorage.getItem("boardIDs")) || [];
+    if (!existingBoardIds.includes(id)) {
+      existingBoardIds.push(id);
+      localStorage.setItem("boardIDs", JSON.stringify(existingBoardIds));
+    }
+  };
 
-  const handleDragEnd = (event) => {
+  // Menghapus ID board dari localStorage
+  const removeBoardIdFromLocalStorage = (id) => {
+    const existingBoardIds = JSON.parse(localStorage.getItem("boardIDs")) || [];
+    const updatedBoardIds = existingBoardIds.filter((item) => item !== id);
+    localStorage.setItem("boardIDs", JSON.stringify(updatedBoardIds));
+  };
+
+  // Fungsi untuk mengambil data boards dan cards
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        if (!workspaceId || !token) {
+          throw new Error("Workspace ID atau Token tidak ditemukan!");
+        }
+
+        const boards = await getBoard(workspaceId, token); 
+        setLists(boards);
+
+        const allCards = [];
+        for (const board of boards) {
+          const cardsData = await getCard(board.id, token); 
+          const transformedCards = cardsData.map((card) => ({
+            ...card,
+            labels: card.label ? (Array.isArray(card.label) ? card.label : [card.label]) : [],
+            board_id: card.board_id || board.id,
+          }));
+          allCards.push(...transformedCards);
+        }
+        setCards(allCards);
+      } catch (err) {
+        console.error("Error fetching boards or cards:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [workspaceId, token]);
+
+
+  // Membuat board baru
+  const handleCreateBoard = async () => {
+    const { value: nama } = await Swal.fire({
+      title: "Buat List Baru",
+      input: "text",
+      inputPlaceholder: "Masukkan nama list baru",
+      showCancelButton: true,
+      confirmButtonText: "Buat",
+      cancelButtonText: "Batal",
+      inputValidator: (value) => {
+        if (!value) {
+          return "Nama list tidak boleh kosong!";
+        }
+      },
+    });
+
+    if (nama) {
+      try {
+        const payload = { nama, workspace_id: workspaceId };
+        const data = await createBoard(payload, token);
+        console.log("List baru berhasil dibuat:", data);
+
+        saveBoardIdToLocalStorage(data.board.id);
+        setLists((prevLists) => [
+          ...prevLists,
+          { id: data.board.id, nama: data.board.nama },
+        ]);
+        Swal.fire("Berhasil!", "List baru berhasil dibuat.", "success");
+      } catch (err) {
+        console.error("Error creating new list:", err);
+        Swal.fire("Error", "Gagal membuat list baru", "error");
+      }
+    }
+  };
+
+  // Hapus board
+  const handleDeleteBoard = async (board) => {
+    Swal.fire({
+      title: "Hapus Board",
+      text: `Hapus Board "${board.nama}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Hapus",
+      cancelButtonText: "Batal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteBoard(board.id, token);
+          removeBoardIdFromLocalStorage(board.id);
+          setLists((prev) => prev.filter((b) => b.id !== board.id));
+          Swal.fire("Berhasil", "Board dihapus", "success");
+        } catch (error) {
+          Swal.fire("Error", error.message, "error");
+        }
+      }
+    });
+  };
+
+  // Membuat kartu baru
+  const handleAddCard = async (boardId) => {
+    const { value: title } = await Swal.fire({
+      title: "Tambah Kartu Baru",
+      input: "text",
+      inputPlaceholder: "Masukkan judul kartu...",
+      showCancelButton: true,
+      confirmButtonText: "Tambah",
+      cancelButtonText: "Batal",
+      inputValidator: (value) => {
+        if (!value) {
+          return "Judul kartu tidak boleh kosong!";
+        }
+      },
+    });
+
+    if (title) {
+      try {
+        const response = await createCard(boardId, title, token);
+        console.log("Kartu berhasil ditambahkan:", response);
+
+        setCards((prevCards) => [...prevCards, response.card]);
+        Swal.fire("Berhasil!", "Kartu berhasil ditambahkan.", "success");
+      } catch (err) {
+        console.error("Gagal menambahkan kartu:", err);
+        Swal.fire("Error", err.message || "Gagal menambahkan kartu", "error");
+      }
+    }
+  };
+
+  // Edit kartu
+  const handleUpdateCard = async (card) => {
+    const { value: formValues } = await Swal.fire({
+      title: "Edit Kartu",
+      html: `
+      <div class="text-left">
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-1">Gambar</label>
+          <input
+            id="swal-cover"
+            type="text"
+            class="w-full border rounded px-4 py-2 text-black"
+            placeholder="Masukkan URL gambar"
+            value="${card.cover || ""}"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-1">Judul</label>
+          <input
+            id="swal-title"
+            type="text"
+            class="w-full border rounded px-4 py-2 text-black"
+            value="${card.title || ""}"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-1">Deskripsi</label>
+          <textarea
+            id="swal-deskripsi"
+            class="w-full border rounded px-4 py-2 text-black"
+          >${card.deskripsi || ""}</textarea>
+        </div>
+      </div>
+    `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Simpan",
+      cancelButtonText: "Batal",
+      customClass: {
+        container: "bg-latar-blue",
+        popup: "bg-latar-blue text-white",
+        title: "text-white",
+        confirmButton: "bg-blue-500 text-white px-4 py-2 rounded",
+        cancelButton: "bg-red-500 text-white px-4 py-2 rounded",
+      },
+      preConfirm: () => {
+        return {
+          cover: document.getElementById("swal-cover").value,
+          title: document.getElementById("swal-title").value,
+          deskripsi: document.getElementById("swal-deskripsi").value,
+        };
+      },
+    });
+
+    if (formValues) {
+      try {
+        const updatedCard = { ...card, ...formValues };
+        await updateCard(card.id, updatedCard, token);
+        setCards((prevCards) =>
+          prevCards.map((c) => (c.id === card.id ? updatedCard : c))
+        );
+        Swal.fire("Berhasil", "Kartu berhasil diperbarui", "success");
+      } catch (err) {
+        console.error("Error updating card:", err);
+        Swal.fire("Error", "Gagal memperbarui kartu", "error");
+      }
+    }
+  };
+
+  // Hapus kartu
+  const handleDeleteCard = async (card) => {
+    try {
+      await deleteCard(card.id, token);
+      setCards((prevCards) => prevCards.filter((c) => c.id !== card.id));
+      Swal.fire("Berhasil", "Kartu berhasil dihapus", "success");
+    } catch (err) {
+      console.error("Error deleting card:", err);
+      Swal.fire("Error", "Gagal menghapus kartu", "error");
+    }
+  };
+
+  // Drag and drop
+  const handleDragEnd = async (event) => {
     const { active, over } = event;
-
     if (!over) return;
 
     const activeId = active.id;
     const overId = over.id;
-
     const activeCard = cards.find((card) => card.id === activeId);
     const overCard = cards.find((card) => card.id === overId);
 
     if (!activeCard || !overCard) return;
 
-    if (activeCard.list === overCard.list) {
-      setCards((cards) => {
-        const oldIndex = cards.findIndex((card) => card.id === activeId);
-        const newIndex = cards.findIndex((card) => card.id === overId);
-        return arrayMove(cards, oldIndex, newIndex);
+    if (activeCard.board_id === overCard.board_id) {
+      setCards((prevCards) => {
+        const oldIndex = prevCards.findIndex((card) => card.id === activeId);
+        const newIndex = prevCards.findIndex((card) => card.id === overId);
+        return arrayMove(prevCards, oldIndex, newIndex);
       });
     } else {
-      setCards((cards) => {
-        const updatedCards = cards.map((card) => {
-          if (card.id === activeId) {
-            return { ...card, list: overCard.list };
-          }
-          return card;
-        });
-        return updatedCards;
-      });
+      try {
+        const payload = {
+          title: activeCard.title, 
+          board_id: overCard.board_id,
+        };
+
+        const updatedCard = await updateCard(activeCard.id, payload, token);
+        setCards((prevCards) =>
+          prevCards.map((card) =>
+            card.id === activeId
+              ? { ...card, board_id: updatedCard.board_id, title: updatedCard.title }
+              : card
+          )
+        );
+      } catch (error) {
+        console.error("Gagal memindahkan card ke board lain:", error);
+      }
     }
   };
 
-  const handleCardClick = (card) => {
-    setSelectedCard(card);
-    setShowModal(true);
-  };
+  // SortableItem
+  const SortableItem = ({ id, children }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id });
 
-  const handleAddCard = (list) => {
-    const newCard = {
-      id: Date.now(),
-      list,
-      labels: [],
-      image: "",
-      text: "New Card",
-      description: "",
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
     };
-    setCards([...cards, newCard]);
-    setSelectedCard(newCard);
-    setShowModal(true);
-  };
 
-  const handleSaveCard = () => {
-    setCards((prevCards) =>
-      prevCards.map((card) =>
-        card.id === selectedCard.id ? selectedCard : card
-      )
+    return (
+      <div ref={setNodeRef} style={style}>
+        <div {...attributes} {...listeners} className="drag-handle">
+          Drag
+        </div>
+        {children}
+      </div>
     );
-    setShowModal(false);
   };
 
-  const handleAddLabel = () => {
-    if (newLabel.text) {
-      setSelectedCard((prev) => ({
-        ...prev,
-        labels: [...prev.labels, newLabel],
-      }));
-      setNewLabel({ text: "", color: "bg-gray-700" });
-      setShowLabelModal(false);
-    }
-  };
-
-  // Action Modal Functions
-  const handleCopyCard = () => {
-    if (selectedCard) {
-      const copiedCard = { ...selectedCard, id: Date.now() };
-      setCards([...cards, copiedCard]);
-      setShowActionModal(false);
-    }
-  };
-
-  const handleMoveCard = () => {
-    // Implement move card logic here
-    alert("Move card functionality not implemented yet.");
-    setShowActionModal(false);
-  };
-
-  const handleDuplicateCard = () => {
-    if (selectedCard) {
-      const duplicatedCard = { ...selectedCard, id: Date.now() };
-      setCards([...cards, duplicatedCard]);
-      setShowActionModal(false);
-    }
-  };
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
       <div className="h-screen bg-gray-900 text-white flex flex-col text-xs">
         <div className="overflow-x-auto flex custom-scroll custom-h-scroll">
           <div className="flex space-x-4 p-6">
-            {Lists.map((list) => (
-              <div
-                key={list}
-                className="flex flex-col border border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg p-4 w-60"
-              >
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-semibold">{list}</h2>
-                  <div className="text-white text-lg cursor-pointer">...</div>
-                </div>
-                <div className="overflow-y-auto custom-scroll p-1">
-                  <SortableContext items={cards.filter((card) => card.list === list).map((card) => card.id)} strategy={verticalListSortingStrategy}>
-                    <div className="space-y-4">
-                      {cards
-                        .filter((card) => card.list === list)
-                        .map((card) => (
-                          <SortableItem key={card.id} id={card.id}>
-                            <div
-                              className="bg-primary-blue rounded-lg shadow-lg w-full flex flex-col cursor-pointer"
-                              onClick={() => handleCardClick(card)}
-                            >
-                              {card.image && (
-                                <img
-                                  src={card.image}
-                                  alt="Card Thumbnail"
-                                  className="w-full object-cover h-20"
-                                />
-                              )}
-                              {card.labels.length > 0 && (
-                                <div className="flex flex-wrap gap-1 p-2">
-                                  {card.labels.map((label, idx) => (
-                                    <span
-                                      key={idx}
-                                      className={`${label.color} text-xs text-white px-2 py-0.5 rounded`}
-                                    >
-                                      {label.text}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                              <div className="p-2">
-                                <p className="text-xs font-semibold">{card.text}</p>
-                              </div>
-                            </div>
-                          </SortableItem>
-                        ))}
-                    </div>
-                  </SortableContext>
-                  <button
-                    className="text-start text-white mt-4 py-2"
-                    onClick={() => handleAddCard(list)}
-                  >
-                    + Tambahkan Kartu
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Action Modal */}
-        <ActionModal
-          isOpen={showActionModal}
-          onClose={() => setShowActionModal(false)}
-          onCopyCard={handleCopyCard}
-          onMoveCard={handleMoveCard}
-          onDuplicateCard={handleDuplicateCard}
-        />
-
-{showModal && selectedCard && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-latar-blue text-white p-6 rounded-lg w-[600px] relative">
-              <button
-                onClick={() => setShowModal(false)}
-                className="absolute top-4 right-4 text-white text-white-700"
-              >
-                ✕
-              </button>
-
-              {selectedCard.image && (
-                <img
-                  src={selectedCard.image}
-                  alt="Card Thumbnail"
-                  className="w-full h-40 object-cover rounded mb-4"
-                />
-              )}
-              <div className="flex gap-4 justify-between items-center">
-                <div className="w-2/3">
-                  <div className="mb-4">
-                    <label className="block text-sm font-semibold mb-1">
-                      Gambar
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border rounded px-4 py-2 text-black"
-                      placeholder="Masukkan URL gambar"
-                      value={selectedCard.image}
-                      onChange={(e) =>
-                        setSelectedCard((prev) => ({
-                          ...prev,
-                          image: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block text-sm font-semibold mb-1">
-                      Judul
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border rounded px-4 py-2 text-black"
-                      value={selectedCard.text}
-                      onChange={(e) =>
-                        setSelectedCard((prev) => ({
-                          ...prev,
-                          text: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-
-                  <p className="text-sm text-gray-500 mb-4">
-                    Dalam List {selectedCard.list}
-                  </p>
-
-                  <div className="mb-4">
-                    <h3 className="text-sm font-semibold">Label</h3>
-                    <div className="flex items-center gap-2 mt-2">
-                      {selectedCard.labels.map((label, idx) => (
-                        <span
-                          key={idx}
-                          className={`${label.color} text-xs px-2 py-1 rounded text-white`}
+            {isLoading ? (
+              <p>Loading board lists...</p>
+            ) : error ? (
+              <p className="text-red-500">{error}</p>
+            ) : (
+              lists.map((list) => (
+                <div
+                  key={list.id}
+                  className="flex flex-col border border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg p-4 w-60"
+                >
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-semibold">{list.nama}</h2>
+                    <div className="text-white text-lg cursor-pointer flex justify-end gap-2">
+                      <button className="text-blue-500 hover:text-blue-700">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
                         >
-                          {label.text}
-                        </span>
-                      ))}
+                          <path d="M17.414 2.586a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H4a1 1 0 01-1-1v-2.586a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0z" />
+                        </svg>
+                      </button>
                       <button
-                        onClick={() => setShowLabelModal(true)}
-                        className="bg-gray-200 text-black text-xs px-2 py-1 rounded"
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDeleteBoard(list)}
                       >
-                        +
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6 2a1 1 0 00-.894.553L4.382 4H3a1 1 0 000 2h1v9a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-1.382l-.724-1.447A1 1 0 0014 2H6zm2 5a1 1 0 112 0v6a1 1 0 11-2 0V7zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V7z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                       </button>
                     </div>
                   </div>
-
-                  <div className="mb-4">
-                    <h3 className="text-sm font-semibold flex justify-between">
-                      Description
-                    </h3>
-                    <textarea
-                      className="w-full border rounded px-4 py-2 mt-2 text-black"
-                      value={selectedCard.description}
-                      onChange={(e) =>
-                        setSelectedCard((prev) => ({
-                          ...prev,
-                          description: e.target.value,
-                        }))
-                      }
-                    />
+                  <div className="overflow-y-auto custom-scroll p-1">
+                    <SortableContext
+                      items={cards
+                        .filter((card) => card.board_id === list.id)
+                        .map((card) => card.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <div className="space-y-4">
+                        {cards
+                          .filter((card) => card.board_id === list.id)
+                          .map((card) => (
+                            <SortableItem key={card.id} id={card.id}>
+                              <div className="bg-primary-blue rounded-lg shadow-lg w-full flex flex-col cursor-pointer">
+                                {card.cover && (
+                                  <img
+                                    src={card.cover}
+                                    alt="Card Thumbnail"
+                                    className="w-full object-cover h-20"
+                                  />
+                                )}
+                                {card.labels && card.labels.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 p-2">
+                                    {card.labels.map((label, idx) => (
+                                      <span
+                                        key={idx}
+                                        className={`${label.color} text-xs text-white px-2 py-0.5 rounded`}
+                                      >
+                                        {label.text}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                                <div className="p-2">
+                                  <p className="text-xs font-semibold">
+                                    {card.title}
+                                  </p>
+                                  <div className="flex justify-end gap-1">
+                                    <button
+                                      onClick={() => handleUpdateCard(card)}
+                                      className="text-blue-500 hover:text-blue-700"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                      >
+                                        <path d="M17.414 2.586a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H4a1 1 0 01-1-1v-2.586a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0z" />
+                                      </svg>
+                                    </button>
+                                    <button
+                                      className="text-red-500 hover:text-red-700"
+                                      onClick={() => handleDeleteCard(card)}
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M6 2a1 1 0 00-.894.553L4.382 4H3a1 1 0 000 2h1v9a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-1.382l-.724-1.447A1 1 0 0014 2H6zm2 5a1 1 0 112 0v6a1 1 0 11-2 0V7zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V7z"
+                                          clipRule="evenodd"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </SortableItem>
+                          ))}
+                      </div>
+                    </SortableContext>
+                    <button
+                      className="text-start text-white mt-4 py-2"
+                      onClick={() => handleAddCard(list.id)}
+                    >
+                      + Tambahkan Kartu
+                    </button>
                   </div>
                 </div>
-                <div className="w-1/3 flex flex-col justify-between h-96 py-4">
-                  <div className="flex flex-col gap-2 mb-4">
-                    <p>Aksi</p>
-                    <button className="bg-blue-500 text-white py-1.5 rounded text-start px-4">
-                      Masuk
-                    </button>
-                    <button className="bg-blue-500 text-white py-1.5 rounded text-start px-4">
-                      Tim
-                    </button>
-                    <button className="bg-blue-500 text-white py-1.5 rounded text-start px-4">
-                      Label
-                    </button>
-                    <button className="bg-blue-500 text-white py-1.5 rounded text-start px-4">
-                      Tanggal
-                    </button>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <p>Navigasi</p>
-                    <button className="bg-blue-500 text-white py-1.5 rounded text-start px-4">
-                      Pindah
-                    </button>
-                    <button className="bg-blue-500 text-white py-1.5 rounded text-start px-4">
-                      Duplikat
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end mt-4">
+              ))
+            )}
+            <div>
+              <div className="flex flex-col border border-primary-blue justify-center items-center bg-secondary-blue bg-opacity-10 rounded-lg py-2 text-center w-60">
                 <button
-                  onClick={handleSaveCard}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="text-lg font-semibold text-center"
+                  onClick={handleCreateBoard}
                 >
-                  Simpan
+                  + Tambahkan List
                 </button>
               </div>
             </div>
           </div>
-        )}
-
-        {showLabelModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-latar-blue text-white p-6 rounded-lg w-[400px] relative">
-              <button
-                onClick={() => setShowLabelModal(false)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-black"
-              >
-                ✕
-              </button>
-              <h3 className="text-lg font-semibold mb-4">Tambah Label Baru</h3>
-
-              <div className="mb-4">
-                <label className="block text-sm font-semibold mb-1">
-                  Nama Label
-                </label>
-                <input
-                  type="text"
-                  className="w-full border rounded px-4 py-2 text-black"
-                  value={newLabel.text}
-                  onChange={(e) =>
-                    setNewLabel({ ...newLabel, text: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-semibold mb-1">
-                  Warna Label
-                </label>
-                <select
-                  className="w-full border rounded px-4 py-2 text-black"
-                  value={newLabel.color}
-                  onChange={(e) =>
-                    setNewLabel({ ...newLabel, color: e.target.value })
-                  }
-                >
-                  <option value="bg-gray-700">Abu-abu</option>
-                  <option value="bg-red-700">Merah</option>
-                  <option value="bg-yellow-700">Kuning</option>
-                  <option value="bg-green-700">Hijau</option>
-                  <option value="bg-blue-700">Biru</option>
-                  <option value="bg-purple-700">Ungu</option>
-                </select>
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  onClick={handleAddLabel}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Tambah
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-      </div>
-      
-      <div className="flex items-center justify-center">
+        </div>
+        <div className="flex items-center justify-center">
           <FooterD />
         </div>
+      </div>
     </DndContext>
   );
 };

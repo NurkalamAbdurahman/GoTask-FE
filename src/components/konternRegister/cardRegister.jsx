@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom"; 
 
 const CardRegister = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +13,8 @@ const CardRegister = () => {
     password: "",
   });
 
+  const navigate = useNavigate(); 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -20,23 +24,44 @@ const CardRegister = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     try {
+      Swal.fire({
+        title: "Mendaftarkan akun...",
+        text: "Mohon tunggu sebentar",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
       const response = await axios.post(
-        "http://api-task.itclub5.my.id/api/register",
+        // "http://api-task.itclub5.my.id/api/register",
+        "http://127.0.0.1:8000/api/register",
         formData
       );
 
       if (response.status === 200 || response.status === 201) {
-        alert("Registrasi berhasil!");
-        window.location.href = "/Login";
-      } else {
-        alert("Registrasi gagal. Silakan coba lagi.");
+        Swal.fire({
+          icon: "success",
+          title: "Registrasi Berhasil!",
+          text: "Silakan login untuk masuk.",
+          showConfirmButton: false,
+          timer: 2000
+        });
+
+        setTimeout(() => {
+          navigate("/Login"); 
+        }, 2000);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Terjadi kesalahan. Silakan coba lagi.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi nanti!",
+      });
     }
   };
 
