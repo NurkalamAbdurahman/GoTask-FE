@@ -1,16 +1,16 @@
 import Logo from "../../assets/images/icon/GoTask.png";
-import CardLogin from "../../components/komponenLandingPage/kontenLogin/CardLogin";
-import ImgLogin from "../../components/komponenLandingPage/kontenLogin/ImgLogin";
+import CardLogin from "../../components/kontenLogin/CardLogin";
+import ImgLogin from "../../components/kontenLogin/ImgLogin";
 
 const Login = () => {
   return (
-    <div className="bg-latar-blue h-screen md:h-auto xl:h-screen text-white p-5 md:p-10">
-      <div className="md:h-1/4 lg:h-auto">
+    <div className="bg-latar-blue h-screen text-white p-5 md:p-10 md:gap-4 md:flex md:flex-col md:justify-between">
+      <div className="h-1/4 md:h-auto">
       <a href="/">
-        <img src={Logo} alt="GoTask Logo" className="mb-8 xl:my-10 2xl:w-60" />
+        <img src={Logo} alt="GoTask Logo" className="2xl:w-60" />
       </a>
       </div>
-      <div className="flex flex-col md:gap-2 md:h-3/4 lg:gap-10 lg:h-auto lg:flex-row justify-between items-center">
+      <div className="flex flex-col md:gap-2 lg:gap-10 lg:h-auto lg:flex-row justify-between items-center h-3/4 md:h-auto">
         <div className="w-full lg:w-1/2 flex 2xl:h-full justify-center mb-8 md:mb-0">
           <CardLogin />
         </div>

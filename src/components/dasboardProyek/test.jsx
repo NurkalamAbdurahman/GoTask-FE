@@ -1,261 +1,479 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-// import FooterD from "./footerD";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import FooterD from "./FooterD";
+import Swal from "sweetalert2";
+import {
+  getBoard,
+  createBoard,
+  deleteBoard,
+} from "../CRUD/Boards/boardService";
+import {
+  getCard,
+  createCard,
+  updateCard,
+  deleteCard,
+} from "../CRUD/Cards/cardService";
 
 const Board = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [showLabelModal, setShowLabelModal] = useState(false);
-  const [newCardText, setNewCardText] = useState("");
-  const [newCardTitle, setNewCardTitle] = useState("");
-  const [newCardImage, setNewCardImage] = useState("");
-  const [newCardLabels, setNewCardLabels] = useState([]);
-  const [labelName, setLabelName] = useState("");
-  const [labelColor, setLabelColor] = useState("bg-gray-700");
-  const [cards, setCards] = useState({});
-  const [currentList, setCurrentList] = useState(null);
+  const [lists, setLists] = useState([]);
+  const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error] = useState(null);
 
-  const Lists = ["Project Resources", "To Do", "Pending", "Blocked", "Done"];
+  const workspaceId = localStorage.getItem("workspaceId");
+  const token = localStorage.getItem("token");
 
+  // Menyimpan ID board ke localStorage
+  const saveBoardIdToLocalStorage = (id) => {
+    const existingBoardIds = JSON.parse(localStorage.getItem("boardIDs")) || [];
+    if (!existingBoardIds.includes(id)) {
+      existingBoardIds.push(id);
+      localStorage.setItem("boardIDs", JSON.stringify(existingBoardIds));
+    }
+  };
+
+  // Menghapus ID board dari localStorage
+  const removeBoardIdFromLocalStorage = (id) => {
+    const existingBoardIds = JSON.parse(localStorage.getItem("boardIDs")) || [];
+    const updatedBoardIds = existingBoardIds.filter((item) => item !== id);
+    localStorage.setItem("boardIDs", JSON.stringify(updatedBoardIds));
+  };
+
+  //  Mengambil data boards dan cards
   useEffect(() => {
-    const storedCards = JSON.parse(localStorage.getItem("kanbanCards")) || {};
-    setCards(storedCards);
-  }, []);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        if (!workspaceId || !token) {
+          throw new Error("Workspace ID atau Token tidak ditemukan!");
+        }
 
-  const saveToLocalStorage = (updatedCards) => {
-    localStorage.setItem("kanbanCards", JSON.stringify(updatedCards));
-  };
+        const boards = await getBoard(workspaceId, token); 
+        setLists(boards);
 
-  const handleAddCard = () => {
-    if (newCardTitle.trim()) {
-      const newCard = {
-        id: Date.now(),
-        title: newCardTitle,
-        text: newCardText,
-        image: newCardImage,
-        labels: newCardLabels,
-      };
+        const allCards = [];
+        for (const board of boards) {
+          const cardsData = await getCard(board.id, token); 
+          const transformedCards = cardsData.map((card) => ({
+            ...card,
+            labels: card.label ? (Array.isArray(card.label) ? card.label : [card.label]) : [],
+            board_id: card.board_id || board.id,
+          }));
+          allCards.push(...transformedCards);
+        }
+        setCards(allCards);
+      } catch (err) {
+        console.error("Error fetching boards or cards:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      const updatedCards = {
-        ...cards,
-        [currentList]: [...(cards[currentList] || []), newCard],
-      };
+    fetchData();
+  }, [workspaceId, token]);
 
-      setCards(updatedCards);
-      saveToLocalStorage(updatedCards);
 
-      setNewCardText("");
-      setNewCardTitle("");
-      setNewCardImage("");
-      setNewCardLabels([]);
-      setShowModal(false);
+  // Membuat board baru
+  const handleCreateBoard = async () => {
+    const { value: nama } = await Swal.fire({
+      title: "Buat List Baru",
+      input: "text",
+      inputPlaceholder: "Masukkan nama list baru",
+      showCancelButton: true,
+      confirmButtonText: "Buat",
+      cancelButtonText: "Batal",
+      inputValidator: (value) => {
+        if (!value) {
+          return "Nama list tidak boleh kosong!";
+        }
+      },
+    });
+
+    if (nama) {
+      try {
+        const payload = { nama, workspace_id: workspaceId };
+        const data = await createBoard(payload, token);
+        console.log("List baru berhasil dibuat:", data);
+
+        saveBoardIdToLocalStorage(data.board.id);
+        setLists((prevLists) => [
+          ...prevLists,
+          { id: data.board.id, nama: data.board.nama },
+        ]);
+        Swal.fire("Berhasil!", "List baru berhasil dibuat.", "success");
+      } catch (err) {
+        console.error("Error creating new list:", err);
+        Swal.fire("Error", "Gagal membuat list baru", "error");
+      }
     }
   };
 
-  const handleAddLabel = () => {
-    if (labelName.trim()) {
-      setNewCardLabels([
-        ...newCardLabels,
-        { text: labelName, color: labelColor },
-      ]);
-      setLabelName("");
-      setLabelColor("bg-gray-700");
-      setShowLabelModal(false);
+  // Hapus board
+  const handleDeleteBoard = async (board) => {
+    Swal.fire({
+      title: "Hapus Board",
+      text: `Hapus Board "${board.nama}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Hapus",
+      cancelButtonText: "Batal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteBoard(board.id, token);
+          removeBoardIdFromLocalStorage(board.id);
+          setLists((prev) => prev.filter((b) => b.id !== board.id));
+          Swal.fire("Berhasil", "Board dihapus", "success");
+        } catch (error) {
+          Swal.fire("Error", error.message, "error");
+        }
+      }
+    });
+  };
+
+  // Membuat kartu baru 
+  const handleAddCard = async (boardId) => {
+    const { value: title } = await Swal.fire({
+      title: "Tambah Kartu Baru",
+      input: "text",
+      inputPlaceholder: "Masukkan judul kartu...",
+      showCancelButton: true,
+      confirmButtonText: "Tambah",
+      cancelButtonText: "Batal",
+      inputValidator: (value) => {
+        if (!value) {
+          return "Judul kartu tidak boleh kosong!";
+        }
+      },
+    });
+
+    if (title) {
+      try {
+        const response = await createCard(boardId, title, token);
+        console.log("Kartu berhasil ditambahkan:", response);
+
+        setCards((prevCards) => [...prevCards, response.card]);
+        Swal.fire("Berhasil!", "Kartu berhasil ditambahkan.", "success");
+      } catch (err) {
+        console.error("Gagal menambahkan kartu:", err);
+        Swal.fire("Error", err.message || "Gagal menambahkan kartu", "error");
+      }
     }
   };
 
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
+  // Edit kartu
+  const handleUpdateCard = async (card) => {
+    const { value: formValues } = await Swal.fire({
+      title: "Edit Kartu",
+      html: `
+      <div class="text-left">
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-1">Gambar</label>
+          <input
+            id="swal-cover"
+            type="text"
+            class="w-full border rounded px-4 py-2 text-black"
+            placeholder="Masukkan URL gambar"
+            value="${card.cover || ""}"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-1">Judul</label>
+          <input
+            id="swal-title"
+            type="text"
+            class="w-full border rounded px-4 py-2 text-black"
+            value="${card.title || ""}"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-1">Deskripsi</label>
+          <textarea
+            id="swal-deskripsi"
+            class="w-full border rounded px-4 py-2 text-black"
+          >${card.deskripsi || ""}</textarea>
+        </div>
+      </div>
+    `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Simpan",
+      cancelButtonText: "Batal",
+      customClass: {
+        container: "bg-latar-blue",
+        popup: "bg-latar-blue text-white",
+        title: "text-white",
+        confirmButton: "bg-blue-500 text-white px-4 py-2 rounded",
+        cancelButton: "bg-red-500 text-white px-4 py-2 rounded",
+      },
+      preConfirm: () => {
+        return {
+          cover: document.getElementById("swal-cover").value,
+          title: document.getElementById("swal-title").value,
+          deskripsi: document.getElementById("swal-deskripsi").value,
+        };
+      },
+    });
 
-    const { source, destination } = result;
+    if (formValues) {
+      try {
+        const updatedCard = { ...card, ...formValues };
+        await updateCard(card.id, updatedCard, token);
+        setCards((prevCards) =>
+          prevCards.map((c) => (c.id === card.id ? updatedCard : c))
+        );
+        Swal.fire("Berhasil", "Kartu berhasil diperbarui", "success");
+      } catch (err) {
+        console.error("Error updating card:", err);
+        Swal.fire("Error", "Gagal memperbarui kartu", "error");
+      }
+    }
+  };
 
-    if (source.droppableId === destination.droppableId) {
-      const updatedCards = Array.from(cards[source.droppableId]);
-      const [movedCard] = updatedCards.splice(source.index, 1);
-      updatedCards.splice(destination.index, 0, movedCard);
+  // Hapus kartu
+  const handleDeleteCard = async (card) => {
+    try {
+      await deleteCard(card.id, token);
+      setCards((prevCards) => prevCards.filter((c) => c.id !== card.id));
+      Swal.fire("Berhasil", "Kartu berhasil dihapus", "success");
+    } catch (err) {
+      console.error("Error deleting card:", err);
+      Swal.fire("Error", "Gagal menghapus kartu", "error");
+    }
+  };
 
-      const updatedState = {
-        ...cards,
-        [source.droppableId]: updatedCards,
-      };
+  // Drag and drop
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+    if (!over) return;
 
-      setCards(updatedState);
-      saveToLocalStorage(updatedState);
+    const activeId = active.id;
+    const overId = over.id;
+    const activeCard = cards.find((card) => card.id === activeId);
+    const overCard = cards.find((card) => card.id === overId);
+
+    if (!activeCard || !overCard) return;
+
+    if (activeCard.board_id === overCard.board_id) {
+      setCards((prevCards) => {
+        const oldIndex = prevCards.findIndex((card) => card.id === activeId);
+        const newIndex = prevCards.findIndex((card) => card.id === overId);
+        return arrayMove(prevCards, oldIndex, newIndex);
+      });
     } else {
-      const sourceList = Array.from(cards[source.droppableId] || []);
-      const destinationList = Array.from(cards[destination.droppableId] || []);
-      const [movedCard] = sourceList.splice(source.index, 1);
+      try {
+        const payload = {
+          title: activeCard.title, 
+          board_id: overCard.board_id,
+        };
 
-      destinationList.splice(destination.index, 0, movedCard);
-
-      const updatedState = {
-        ...cards,
-        [source.droppableId]: sourceList,
-        [destination.droppableId]: destinationList,
-      };
-
-      setCards(updatedState);
-      saveToLocalStorage(updatedState);
+        const updatedCard = await updateCard(activeCard.id, payload, token);
+        setCards((prevCards) =>
+          prevCards.map((card) =>
+            card.id === activeId
+              ? { ...card, board_id: updatedCard.board_id, title: updatedCard.title }
+              : card
+          )
+        );
+      } catch (error) {
+        console.error("Gagal memindahkan card ke board lain:", error);
+      }
     }
   };
+
+  // SortableItem
+  const SortableItem = ({ id, children }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
+
+    return (
+      <div ref={setNodeRef} style={style}>
+        <div {...attributes} {...listeners} className="drag-handle">
+          Drag
+        </div>
+        {children}
+      </div>
+    );
+  };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   return (
-    <div className="h-screen bg-gray-900 text-white flex flex-col text-xs">
-      <DragDropContext onDragEnd={onDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="h-screen bg-gray-900 text-white flex flex-col text-xs">
         <div className="overflow-x-auto flex custom-scroll custom-h-scroll">
           <div className="flex space-x-4 p-6">
-            {Lists.map((list) => (
-              <Droppable key={list} droppableId={list}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className="flex flex-col border border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg p-4 w-60"
-                  >
-                    <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-lg font-semibold">{list}</h2>
-                    </div>
-                    <div className="overflow-y-auto custom-scroll p-1">
-                      <div className="space-y-4">
-                        {(cards[list] || []).map((card, index) => (
-                          <Draggable
-                            key={card.id}
-                            draggableId={card.id.toString()}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className="bg-primary-blue rounded-lg shadow-lg w-full flex flex-col"
-                              >
-                                {card.image && (
-                                  <img
-                                    src={card.image}
-                                    alt="Card Thumbnail"
-                                    className="w-full object-cover h-20 rounded-t-lg cursor-pointer"
-                                  />
-                                )}
-                                <div className="p-2">
-                                  {card.labels && (
-                                    <div className="flex flex-wrap gap-1">
-                                      {card.labels.map((label, idx) => (
-                                        <span
-                                          key={idx}
-                                          className={`${label.color} text-white text-xs px-2 py-0.5 rounded`}
-                                        >
-                                          {label.text}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  )}
-                                  {card.title && (
-                                    <h3 className="text-sm font-bold mb-2">
-                                      {card.title}
-                                    </h3>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                      </div>
-                      {provided.placeholder}
+            {isLoading ? (
+              <p>Loading board lists...</p>
+            ) : error ? (
+              <p className="text-red-500">{error}</p>
+            ) : (
+              lists.map((list) => (
+                <div
+                  key={list.id}
+                  className="flex flex-col border border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg p-4 w-60"
+                >
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-semibold">{list.nama}</h2>
+                    <div className="text-white text-lg cursor-pointer flex justify-end gap-2">
+                      <button className="text-blue-500 hover:text-blue-700">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M17.414 2.586a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H4a1 1 0 01-1-1v-2.586a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0z" />
+                        </svg>
+                      </button>
                       <button
-                        className="text-start text-white mt-4 py-2"
-                        onClick={() => {
-                          setCurrentList(list);
-                          setShowModal(true);
-                        }}
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDeleteBoard(list)}
                       >
-                        + Tambahkan Kartu
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6 2a1 1 0 00-.894.553L4.382 4H3a1 1 0 000 2h1v9a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-1.382l-.724-1.447A1 1 0 0014 2H6zm2 5a1 1 0 112 0v6a1 1 0 11-2 0V7zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V7z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                       </button>
                     </div>
                   </div>
-                )}
-              </Droppable>
-            ))}
-          </div>
-        </div>
-      </DragDropContext>
-
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-gray-800 p-6 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Tambahkan Kartu</h2>
-            <input
-              type="text"
-              className="w-full mb-4 p-2 rounded bg-gray-700 text-white border border-gray-600"
-              placeholder="Judul kartu"
-              value={newCardTitle}
-              onChange={(e) => setNewCardTitle(e.target.value)}
-            />
-            <textarea
-              className="w-full mb-4 p-2 rounded bg-gray-700 text-white border border-gray-600"
-              rows="4"
-              placeholder="Deskripsi kartu"
-              value={newCardText}
-              onChange={(e) => setNewCardText(e.target.value)}
-            ></textarea>
-            <div className="flex justify-end space-x-2">
-              <button
-                className="px-4 py-2 bg-gray-600 text-white rounded"
-                onClick={() => setShowModal(false)}
-              >
-                Batal
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-                onClick={handleAddCard}
-              >
-                Simpan
-              </button>
+                  <div className="overflow-y-auto custom-scroll p-1">
+                    <SortableContext
+                      items={cards
+                        .filter((card) => card.board_id === list.id)
+                        .map((card) => card.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      <div className="space-y-4">
+                        {cards
+                          .filter((card) => card.board_id === list.id)
+                          .map((card) => (
+                            <SortableItem key={card.id} id={card.id}>
+                              <div className="bg-primary-blue rounded-lg shadow-lg w-full flex flex-col cursor-pointer">
+                                {card.cover && (
+                                  <img
+                                    src={card.cover}
+                                    alt="Card Thumbnail"
+                                    className="w-full object-cover h-20"
+                                  />
+                                )}
+                                {card.labels && card.labels.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 p-2">
+                                    {card.labels.map((label, idx) => (
+                                      <span
+                                        key={idx}
+                                        className={`${label.color} text-xs text-white px-2 py-0.5 rounded`}
+                                      >
+                                        {label.text}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                                <div className="p-2">
+                                  <p className="text-xs font-semibold">
+                                    {card.title}
+                                  </p>
+                                  <div className="flex justify-end gap-1">
+                                    <button
+                                      onClick={() => handleUpdateCard(card)}
+                                      className="text-blue-500 hover:text-blue-700"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                      >
+                                        <path d="M17.414 2.586a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H4a1 1 0 01-1-1v-2.586a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0z" />
+                                      </svg>
+                                    </button>
+                                    <button
+                                      className="text-red-500 hover:text-red-700"
+                                      onClick={() => handleDeleteCard(card)}
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M6 2a1 1 0 00-.894.553L4.382 4H3a1 1 0 000 2h1v9a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-1.382l-.724-1.447A1 1 0 0014 2H6zm2 5a1 1 0 112 0v6a1 1 0 11-2 0V7zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V7z"
+                                          clipRule="evenodd"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </SortableItem>
+                          ))}
+                      </div>
+                    </SortableContext>
+                    <button
+                      className="text-start text-white mt-4 py-2"
+                      onClick={() => handleAddCard(list.id)}
+                    >
+                      + Tambahkan Kartu
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+            <div>
+              <div className="flex flex-col border border-primary-blue justify-center items-center bg-secondary-blue bg-opacity-10 rounded-lg py-2 text-center w-60">
+                <button
+                  className="text-lg font-semibold text-center"
+                  onClick={handleCreateBoard}
+                >
+                  + Tambahkan List
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      )}
-
-      {showLabelModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-gray-800 p-6 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Tambahkan Label</h2>
-            <input
-              type="text"
-              className="w-full mb-4 p-2 rounded bg-gray-700 text-white border border-gray-600"
-              placeholder="Nama label"
-              value={labelName}
-              onChange={(e) => setLabelName(e.target.value)}
-            />
-            <select
-              className="w-full mb-4 p-2 rounded bg-gray-700 text-white border border-gray-600"
-              value={labelColor}
-              onChange={(e) => setLabelColor(e.target.value)}
-            >
-              <option value="bg-gray-700">Abu-abu</option>
-              <option value="bg-red-700">Merah</option>
-              <option value="bg-green-700">Hijau</option>
-              <option value="bg-blue-700">Biru</option>
-              <option value="bg-yellow-700">Kuning</option>
-              <option value="bg-purple-700">Ungu</option>
-            </select>
-            <div className="flex justify-end space-x-2">
-              <button
-                className="px-4 py-2 bg-gray-600 text-white rounded"
-                onClick={() => setShowLabelModal(false)}
-              >
-                Batal
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-                onClick={handleAddLabel}
-              >
-                Simpan
-              </button>
-            </div>
-          </div>
+        <div className="flex items-center justify-center">
+          <FooterD />
         </div>
-      )}
-    </div>
+      </div>
+    </DndContext>
   );
 };
 

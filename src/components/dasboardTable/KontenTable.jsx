@@ -1,3 +1,132 @@
+const tableData = [
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+  {
+    card: "Looking for even more project management",
+    list: "Project Resources",
+    labels: [
+      { text: "Step Label", color: "bg-yellow-800" },
+      { text: "Priority", color: "bg-red-800" },
+      { text: "Design Team", color: "bg-green-800" },
+    ],
+    rekan: [
+      { text: "HK", color: "bg-yellow-800" },
+      { text: "NZ", color: "bg-green-800" },
+    ],
+    tanggal: "19 Oktober 2024",
+  },
+];
+
 const KontenTable = () => {
   return (
     <div className="inner-member2 text-sm 2xl:text-lg flex flex-col gap-4 p-4 pt-10">
@@ -14,93 +143,30 @@ const KontenTable = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-gray-300 hover:bg-gray-700">
-              <td className="px-4 py-2 flex items-center gap-2">
-                <div className="bg-gradient-to-r from-[#000000] to-[#290036] hidden lg:block w-5 h-4 rounded"></div>
-                <p className="text-left">
-                  Looking for even more project management
-                </p>
-              </td>
-              <td className="px-4 py-2">Project Resources</td>
-              <td className="px-4 py-2">
-                <button className="bg-yellow-800 text-white text-xs px-2 py-1 rounded mr-1">
-                  Step Label
-                </button>
-                <button className="bg-red-800 text-white text-xs px-2 py-1 rounded mr-1">
-                  Priority
-                </button>
-                <button className="bg-green-800 text-white text-xs px-2 py-1 rounded">
-                  Design Team
-                </button>
-              </td>
-              <td className="px-4 py-2">
-                <span className="bg-yellow-800 text-white text-xs px-2 py-1 rounded-full mr-1">
-                  HK
-                </span>
-                <span className="bg-green-800 text-white text-xs px-2 py-1 rounded-full">
-                  NZ
-                </span>
-              </td>
-              <td className="px-4 py-2">19 Oktober 2024</td>
-            </tr>
-            <tr className="border-b border-gray-300 hover:bg-gray-700">
-              <td className="px-4 py-2 flex items-center gap-2">
-                <div className="bg-gradient-to-r from-[#000000] to-[#290036] hidden lg:block w-5 h-4 rounded"></div>
-                <p className="text-left">
-                  Looking for even more project management
-                </p>
-              </td>
-              <td className="px-4 py-2">Project Resources</td>
-              <td className="px-4 py-2">
-                <button className="bg-yellow-800 text-white text-xs px-2 py-1 rounded mr-1">
-                  Step Label
-                </button>
-                <button className="bg-red-800 text-white text-xs px-2 py-1 rounded mr-1">
-                  Priority
-                </button>
-                <button className="bg-green-800 text-white text-xs px-2 py-1 rounded">
-                  Design Team
-                </button>
-              </td>
-              <td className="px-4 py-2">
-                <span className="bg-yellow-800 text-white text-xs px-2 py-1 rounded-full mr-1">
-                  HK
-                </span>
-                <span className="bg-green-800 text-white text-xs px-2 py-1 rounded-full">
-                  NZ
-                </span>
-              </td>
-              <td className="px-4 py-2">19 Oktober 2024</td>
-            </tr>
-            <tr className="border-b border-gray-300 hover:bg-gray-700">
-              <td className="px-4 py-2 flex items-center gap-2">
-                <div className="bg-gradient-to-r from-[#000000] to-[#290036] hidden lg:block w-5 h-4 rounded"></div>
-                <p className="text-left">
-                  Looking for even more project management
-                </p>
-              </td>
-              <td className="px-4 py-2">Project Resources</td>
-              <td className="px-4 py-2">
-                <button className="bg-yellow-800 text-white text-xs px-2 py-1 rounded mr-1">
-                  Step Label
-                </button>
-                <button className="bg-red-800 text-white text-xs px-2 py-1 rounded mr-1">
-                  Priority
-                </button>
-                <button className="bg-green-800 text-white text-xs px-2 py-1 rounded">
-                  Design Team
-                </button>
-              </td>
-              <td className="px-4 py-2">
-                <span className="bg-yellow-800 text-white text-xs px-2 py-1 rounded-full mr-1">
-                  HK
-                </span>
-                <span className="bg-green-800 text-white text-xs px-2 py-1 rounded-full">
-                  NZ
-                </span>
-              </td>
-              <td className="px-4 py-2">19 Oktober 2024</td>
-            </tr>
+            {tableData.map((row, index) => (
+              <tr key={index} className="border-b border-gray-300 hover:bg-gray-700">
+                <td className="px-4 py-2 flex items-center gap-2">
+                  <div className="bg-gradient-to-r from-[#000000] to-[#290036] hidden lg:block w-5 h-4 rounded"></div>
+                  <p className="text-left">{row.card}</p>
+                </td>
+                <td className="px-4 py-2">{row.list}</td>
+                <td className="px-4 py-2">
+                  {row.labels.map((label, idx) => (
+                    <button key={idx} className={`${label.color} text-white text-xs px-2 py-1 rounded mr-1`}>
+                      {label.text}
+                    </button>
+                  ))}
+                </td>
+                <td className="px-4 py-2">
+                  {row.rekan.map((rekan, idx) => (
+                    <span key={idx} className={`${rekan.color} text-white text-xs px-2 py-1 rounded-full mr-1`}>
+                      {rekan.text}
+                    </span>
+                  ))}
+                </td>
+                <td className="px-4 py-2">{row.tanggal}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

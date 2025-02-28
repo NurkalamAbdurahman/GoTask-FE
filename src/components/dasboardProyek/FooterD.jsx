@@ -1,67 +1,156 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import { getWorkspaces, updateWorkspace } from "../CRUD/Workspaces/workspaceService";
 
 const FooterD = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const [workspace, setWorkspace] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const token = localStorage.getItem("token");
+  const workspaceId = localStorage.getItem("workspaceId");
+
+  // Ambil detail workspace dari API, berdasarkan workspaceId yang tersimpan di localStorage
+  useEffect(() => {
+    const fetchWorkspaceDetail = async () => {
+      try {
+        const data = await getWorkspaces(token);
+        const foundWorkspace = data.find(
+          (ws) => ws.id.toString() === workspaceId
+        );
+        if (!foundWorkspace) {
+          throw new Error("Workspace tidak ditemukan");
+        }
+        setWorkspace(foundWorkspace);
+      } catch (err) {
+        setError(err.response ? err.response.data.message : err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (token && workspaceId) {
+      fetchWorkspaceDetail();
+    } else {
+      setLoading(false);
+      setError("Token atau Workspace ID tidak ditemukan");
+    }
+  }, [token, workspaceId]);
+
+  // Fungsi untuk mengedit judul workspace menggunakan SweetAlert2
+  const handleEditWorkspace = (workspace) => {
+    Swal.fire({
+      title: "Edit Workspace",
+      input: "text",
+      inputValue: workspace.workspace,
+      showCancelButton: true,
+      confirmButtonText: "Simpan",
+      cancelButtonText: "Batal",
+      inputValidator: (value) => {
+        if (!value || !value.trim()) {
+          return "Nama workspace tidak boleh kosong!";
+        }
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed && result.value.trim()) {
+        const newName = result.value.trim();
+        try {
+          // Panggil API untuk mengupdate workspace
+          await updateWorkspace(workspace.id, newName, token);
+          // Perbarui state workspace dengan judul baru
+          setWorkspace((prev) => ({ ...prev, workspace: newName }));
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "Workspace berhasil diperbarui",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        } catch (error) {
+          console.error("Error updating workspace:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Gagal memperbarui workspace. Silakan coba lagi.",
+          });
+        }
+      }
+    });
+  };
+
+  const handleShareProject = () => {
+    Swal.fire({
+      title: "Share Project",
+      html: `<input id="swal-username" type="text" class="swal2-input" placeholder="Masukkan username anggota">`,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Add Member",
+      cancelButtonText: "Batal",
+      preConfirm: () => {
+        const username = document.getElementById("swal-username").value;
+        if (!username || !username.trim()) {
+          Swal.showValidationMessage("Username tidak boleh kosong!");
+        }
+        return username;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const username = result.value;
+        console.log("Member added:", username);
+        Swal.fire({
+          icon: "success",
+          title: "Member Added",
+          text: `Member dengan username ${username} telah ditambahkan.`,
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
+
+  if (loading) return <p>Loading workspace...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
     <div className="border border-primary-blue bg-secondary-blue bg-opacity-10 px-4 py-2 my-4 flex flex-wrap justify-between items-center w-full lg:w-3/4 bg-blur-lg rounded-lg">
-      {/* Bagian Kiri */}
       <div className="flex flex-wrap items-center justify-between space-x-3 w-full lg:w-auto mb-2 lg:mb-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
-          <span className="text-white text-sm font-medium">Project Management</span>
-          <span className="text-gray-400 text-sm">Private</span>
-        </div>
-
-        {/* Tombol untuk Mobile */}
-        <div className="lg:hidden relative">
+          {/* Tombol judul yang dapat diklik untuk mengedit workspace */}
           <button
-            className="bg-blue-500 text-white text-sm font-medium px-4 py-1 rounded focus:outline-none hover:bg-blue-600 transition flex items-center space-x-2"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            onClick={() => handleEditWorkspace(workspace)}
+            className="text-white text-sm font-medium hover:underline focus:outline-none"
           >
-            <span>Menu</span>
-            <svg
-              className={`w-4 h-4 transform transition-transform ${isDropdownOpen ? "rotate-180" : "rotate-0"}`}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-            </svg>
+            {workspace.workspace}
           </button>
-          {isDropdownOpen && (
-            <div className="absolute right-0 bottom-full mb-2 w-32 bg-white rounded shadow-lg">
-              <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Board</button>
-              <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Table</button>
-            </div>
-          )}
         </div>
-
-        {/* Tombol untuk Tablet & Desktop */}
         <div className="hidden lg:flex items-center space-x-2">
-          <button className="bg-blue-500 text-white text-sm font-medium px-4 py-1 rounded focus:outline-none hover:bg-blue-600 transition">
+          <button
+            onClick={() => navigate("/Dasboard-Proyek")}
+            className="bg-blue-500 text-white text-sm font-medium px-4 py-1 rounded focus:outline-none hover:bg-blue-600 transition"
+          >
             Board
           </button>
-          <button className="text-white text-sm font-medium px-4 py-1 rounded focus:outline-none hover:bg-gray-700 transition">
+          <button
+            onClick={() => navigate("/Dasboard-Table")}
+            className="text-white text-sm font-medium px-4 py-1 rounded focus:outline-none hover:bg-gray-700 transition"
+          >
             Table
           </button>
         </div>
       </div>
-
-      {/* Bagian Kanan */}
       <div className="flex items-center border-t lg:border-t-0 lg:border-l border-white pt-2 lg:pt-0 lg:pl-2 space-x-4 w-full lg:w-auto">
-        <div className="flex items-center -space-x-1">
-          <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs font-bold text-black">
+        <div className="flex items-center -space-x-2">
+          {/* Contoh avatar anggota */}
+          <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs font-bold text-black border-2 border-white">
             NZ
           </div>
-          <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center text-xs font-bold text-black">
-            AS
-          </div>
-          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold text-black">
-            LT
-          </div>
         </div>
-        <button className="bg-blue-500 text-white text-sm font-medium px-4 py-1 rounded focus:outline-none hover:bg-blue-600 transition">
+        <button
+          onClick={handleShareProject}
+          className="bg-blue-500 text-white text-sm font-medium px-4 py-1 rounded focus:outline-none hover:bg-blue-600 transition"
+        >
           Share
         </button>
       </div>
