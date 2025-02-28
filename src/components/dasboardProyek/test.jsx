@@ -55,7 +55,7 @@ const Board = () => {
     localStorage.setItem("boardIDs", JSON.stringify(updatedBoardIds));
   };
 
-  // Fungsi untuk mengambil data boards dan cards
+  //  Mengambil data boards dan cards
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -147,7 +147,7 @@ const Board = () => {
     });
   };
 
-  // Membuat kartu baru
+  // Membuat kartu baru 
   const handleAddCard = async (boardId) => {
     const { value: title } = await Swal.fire({
       title: "Tambah Kartu Baru",
