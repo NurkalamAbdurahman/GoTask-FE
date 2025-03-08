@@ -4,7 +4,6 @@ import axios from "axios";
 import Logo from "../../assets/images/icon/GoTask.png";
 import Board from "../../assets/images/icon/board.png";
 import Member from "../../assets/images/icon/member.png";
-import Setting from "../../assets/images/icon/setting.png";
 import Table from "../../assets/images/icon/table.png";
 import "./Sidebar.css";
 import Swal from "sweetalert2";
@@ -15,12 +14,13 @@ import {
   updateWorkspace,
   deleteWorkspace,
 } from "../CRUD/Workspaces/workspaceService";
+import { LoadingSpinner } from "../Lainnya/Loading";
 
-const availableColors = [
-  "bg-gradient-to-r from-red-500 to-yellow-500",
-  "bg-gradient-to-r from-blue-500 to-green-500",
-  "bg-gradient-to-r from-purple-500 via-pink-500 to-red-500",
-  "bg-gradient-to-r from-gray-500 via-gray-700 to-black",
+const availablecolours = [
+  "from-red-900 to-gray-900",
+  "from-blue-900 to-gray-900",
+  "from-purple-900 via-pink-900 to-gray-900",
+  "from-gray-900 to-gray-900",
 ];
 
 const Sidebar = () => {
@@ -38,7 +38,6 @@ const Sidebar = () => {
 
     if (!token) {
       Swal.fire({
-        icon: "warning",
         title: "Akses Ditolak",
         text: "Token tidak ditemukan. Silakan login terlebih dahulu!",
         showConfirmButton: true,
@@ -68,100 +67,160 @@ const Sidebar = () => {
     };
   }, [navigate]);
 
-  const handleCreateWorkspace = async (workspaceName) => {
-    try {
-      const token = localStorage.getItem("token");
-      const defaultColor = availableColors[0];
-      const response = await createWorkspace(
-        workspaceName,
-        defaultColor,
-        token
-      );
-      const newWorkspace = response.workspace;
-      console.log("Workspace berhasil dibuat:", newWorkspace);
-      if (newWorkspace && newWorkspace.id && newWorkspace.workspace) {
-        setBoards([...boards, newWorkspace]);
-        Swal.fire({
-          icon: "success",
-          title: "Berhasil",
-          text: response.message,
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      } else {
-        throw new Error("Response tidak valid dari server");
-      }
-    } catch (error) {
-      console.error("Gagal membuat workspace:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Gagal Membuat Workspace",
-        text:
-          error.response?.data?.message ||
-          error.message ||
-          "Terjadi kesalahan saat membuat workspace. Silakan coba lagi.",
-      });
-    }
-  };
-
   const handleAddWorkspaceClick = () => {
     Swal.fire({
-      title: "Buat Workspace Baru",
-      input: "text",
-      inputPlaceholder: "Masukkan nama workspace",
+      title: "🎨 Buat Workspace Baru",
+      html: `
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-blue-100 mb-1">Judul Workspace</label>
+            <input id="swal-input-title" 
+                   class="w-full px-4 py-2 rounded-lg bg-primary-blue focus:ring-blue-500 text-white placeholder-blue-300 transition-all" 
+                   placeholder="Masukkan nama workspace">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-blue-100 mb-1">Pilih Warna Tema</label>
+            <select id="swal-input-colour" 
+                    class="w-full px-4 py-2 rounded-lg bg-primary-blue focus:ring-blue-500 text-white appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjYmZjMGRmIiBkPSJNMTIgMTUuNWwzLjUtMy41aC03eiIvPjwvc3ZnPg==')] bg-no-repeat bg-[right_1rem_center]">
+              <option value="${availablecolours[3]}" class="bg-primary-blue hover:bg-blue-600">Default</option>
+              <option value="${availablecolours[0]}" class="bg-primary-blue hover:bg-blue-600">Merah-black</option>
+              <option value="${availablecolours[1]}" class="bg-primary-blue hover:bg-blue-600">Biru-black</option>
+              <option value="${availablecolours[2]}" class="bg-primary-blue hover:bg-blue-600">Ungu-Pink-black</option>
+            </select>
+          </div>
+        </div>
+      `,
+      background: "#1B262C",
+      customClass: {
+        title: "text-2xl font-bold text-blue-100",
+        popup: "rounded-xl border-2 border-blue-400",
+        confirmButton:
+          "bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg font-semibold transition-colours",
+        cancelButton:
+          "bg-gray-500 hover:bg-gray-600 px-6 py-2 rounded-lg font-semibold transition-colours",
+      },
+      focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Buat",
       cancelButtonText: "Batal",
-      inputValidator: (value) => {
-        if (!value || !value.trim()) {
-          return "Nama workspace tidak boleh kosong!";
+      preConfirm: () => {
+        const title = document.getElementById("swal-input-title").value;
+        const colour = document.getElementById("swal-input-colour").value;
+        if (!title.trim()) {
+          Swal.showValidationMessage("Judul tidak boleh kosong");
         }
+        return { title: title.trim(), colour };
       },
-    }).then((result) => {
-      if (result.isConfirmed && result.value.trim()) {
-        handleCreateWorkspace(result.value.trim());
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const { title, colour } = result.value;
+        try {
+          const token = localStorage.getItem("token");
+          const response = await createWorkspace(title, colour, token);
+          const newWorkspace = response.workspace;
+          console.log("Workspace berhasil dibuat:", newWorkspace);
+          if (newWorkspace && newWorkspace.id && newWorkspace.workspace) {
+            setBoards([...boards, newWorkspace]);
+            Swal.fire({
+              title: "Berhasil",
+              text: response.message,
+              timer: 2000,
+              showConfirmButton: false,
+              background: "#1B262C",
+              customClass: {
+                title: "text-2xl font-bold text-blue-100",
+                popup: "rounded-xl border-2 border-blue-400",
+              },
+
+            });
+          } else {
+            throw new Error("Response tidak valid dari server");
+          }
+        } catch (error) {
+          console.error("Gagal membuat workspace:", error);
+          Swal.fire({
+            title: "Gagal Membuat Workspace",
+            text:
+              error.response?.data?.message ||
+              error.message ||
+              "Terjadi kesalahan saat membuat workspace. Silakan coba lagi.",
+          });
+        }
       }
     });
   };
 
   const handleEditWorkspace = (workspace) => {
     Swal.fire({
-      title: "Edit Workspace",
-      input: "text",
-      inputValue: workspace.workspace,
+      title: "✏️ Edit Workspace",
+      html: `
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-blue-100 mb-1">Nama Workspace</label>
+            <input id="swal-edit-workspace" 
+                   class="w-full px-4 py-2 rounded-lg bg-[#0F4C75] border-2 border-[#1B6CA8] focus:border-[#3282B8] text-blue-100 placeholder-blue-300 transition-all"
+                   value="${workspace.workspace}">
+          </div>
+        </div>
+      `,
+      background: "#1B262C",
+      customClass: {
+        title: "text-2xl font-bold text-blue-100",
+        popup: "rounded-xl border-2 border-blue-400",
+        confirmButton:
+          "bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg font-semibold transition-colors",
+        cancelButton:
+          "bg-gray-500 hover:bg-gray-600 px-6 py-2 rounded-lg font-semibold transition-colors",
+      },
       showCancelButton: true,
       confirmButtonText: "Simpan",
       cancelButtonText: "Batal",
-      inputValidator: (value) => {
-        if (!value || !value.trim()) {
-          return "Nama workspace tidak boleh kosong!";
+      preConfirm: () => {
+        const input = document.getElementById("swal-edit-workspace");
+        const value = input.value.trim();
+
+        if (!value) {
+          Swal.showValidationMessage("Nama workspace tidak boleh kosong!");
+          return false;
         }
+
+        return value;
       },
     }).then(async (result) => {
-      if (result.isConfirmed && result.value.trim()) {
-        const newName = result.value.trim();
+      if (result.isConfirmed) {
+        const newName = result.value;
         try {
           const token = localStorage.getItem("token");
-          await updateWorkspace(workspace.id, newName, token);
-          setBoards((prevBoards) =>
-            prevBoards.map((ws) =>
+          await updateWorkspace(workspace.id, { workspace: newName }, token);
+
+          setBoards((prev) =>
+            prev.map((ws) =>
               ws.id === workspace.id ? { ...ws, workspace: newName } : ws
             )
           );
+
           Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            text: "Workspace berhasil diperbarui",
+            title: "Berhasil! ✅",
+            text: `Workspace "${newName}" berhasil diperbarui`,
+            background: "#1B262C",
+            customClass: {
+              title: "text-blue-100",
+              popup: "border-2 border-blue-400",
+            },
             timer: 2000,
             showConfirmButton: false,
           });
         } catch (error) {
-          console.error("Error updating workspace:", error);
           Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Gagal memperbarui workspace. Silakan coba lagi.",
+            title: "Gagal! ❌",
+            html: `<p class="text-blue-100">Gagal menghapus workspace: <br/> <span class="text-red-400">Anda Tidak Memiliki AKSES!!!</span></p>`,
+            background: "#1B262C",
+            customClass: {
+              title: "text-blue-100",
+              popup: "border-2 border-red-400",
+            },
           });
+          console.error("Update error:", error);
         }
       }
     });
@@ -169,34 +228,50 @@ const Sidebar = () => {
 
   const handleDeleteWorkspace = (workspace) => {
     Swal.fire({
-      title: "Hapus Workspace",
-      text: `Anda yakin ingin menghapus workspace "${workspace.workspace}"?`,
-      icon: "warning",
+      title: "⚠️ Hapus Workspace",
+      html: `<p class="text-blue-100">Anda yakin ingin menghapus <strong class="text-red-400">"${workspace.workspace}"</strong> secara permanen?</p>`,
+      background: "#1B262C",
+      customClass: {
+        title: "text-2xl font-bold text-blue-100",
+        popup: "rounded-xl border-2 border-red-400",
+        confirmButton:
+          "bg-red-500 hover:bg-red-600 px-6 py-2 rounded-lg font-semibold transition-colors",
+        cancelButton:
+          "bg-gray-500 hover:bg-gray-600 px-6 py-2 rounded-lg font-semibold transition-colors",
+      },
       showCancelButton: true,
-      confirmButtonText: "Hapus",
+      confirmButtonText: "Hapus Permanen",
       cancelButtonText: "Batal",
+      focusConfirm: false,
+      reverseButtons: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const token = localStorage.getItem("token");
           await deleteWorkspace(workspace.id, token);
-          setBoards((prevBoards) =>
-            prevBoards.filter((ws) => ws.id !== workspace.id)
-          );
+          setBoards((prev) => prev.filter((ws) => ws.id !== workspace.id));
+
           Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            text: "Workspace berhasil dihapus",
+            title: "Terhapus! 🗑️",
+            html: `<p class="text-blue-100">Workspace <strong>${workspace.workspace}</strong> berhasil dihapus</p>`,
+            background: "#1B262C",
+            customClass: {
+              popup: "border-2 border-blue-400",
+            },
             timer: 2000,
             showConfirmButton: false,
           });
         } catch (error) {
-          console.error("Error deleting workspace:", error);
           Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Gagal menghapus workspace. Silakan coba lagi.",
+            title: "Gagal! ⚠️",
+            html: `<p class="text-blue-100">Gagal menghapus workspace: <br/> <span class="text-red-400">Anda Tidak Memiliki AKSES!!!</span></p>`,
+            background: "#1B262C",
+            customClass: {
+              popup: "border-2 border-red-400",
+              title: "text-red-400",
+            },
           });
+          console.error("Delete error:", error);
         }
       }
     });
@@ -313,13 +388,28 @@ const Sidebar = () => {
                   </NavLink>
                 </li>
                 <li className="mb-2">
-                  <NavLink
-                    to="/Dasboard-Member"
+                <NavLink
+                    to={(() => {
+                      const workspaceId = localStorage.getItem("workspaceId");
+                      return `/Dasboard-Member/${workspaceId}`;
+                    })()}
                     className={({ isActive }) =>
                       `flex items-center px-2 py-1 rounded text-xs hover:bg-secondary-blue ${
                         isActive ? "bg-secondary-blue" : ""
                       }`
                     }
+                    onClick={(e) => {
+                      const workspaceId = localStorage.getItem("workspaceId");
+                      if (workspaceId) {
+                        localStorage.setItem("memberWorkspaceId", workspaceId);
+                      } else {
+                        e.preventDefault();
+                        Swal.fire({
+                          title: "Peringatan",
+                          text: "Silakan pilih workspace terlebih dahulu!",
+                        });
+                      }
+                    }}
                   >
                     <img
                       src={Member}
@@ -335,7 +425,7 @@ const Sidebar = () => {
                     </span>
                   </NavLink>
                 </li>
-                <li className="mb-2">
+                {/* <li className="mb-2">
                   <NavLink
                     to="/Dasboard-Setting"
                     className={({ isActive }) =>
@@ -357,7 +447,7 @@ const Sidebar = () => {
                       Workspace settings
                     </span>
                   </NavLink>
-                </li>
+                </li> */}
               </ul>
             </div>
 
@@ -368,19 +458,31 @@ const Sidebar = () => {
                 } flex justify-between items-center`}
               >
                 GoTask Views
-                <span className="px-2 py-1 rounded hover:bg-secondary-blue">
-                  +
-                </span>
               </h3>
               <ul>
                 <li className="mb-2">
                   <NavLink
-                    to="/Dasboard-Table"
+                    to={(() => {
+                      const workspaceId = localStorage.getItem("workspaceId");
+                      return `/Dasboard-Table/${workspaceId}`;
+                    })()}
                     className={({ isActive }) =>
                       `flex items-center px-2 py-1 rounded text-xs hover:bg-secondary-blue ${
                         isActive ? "bg-secondary-blue" : ""
                       }`
                     }
+                    onClick={(e) => {
+                      const workspaceId = localStorage.getItem("workspaceId");
+                      if (workspaceId) {
+                        localStorage.setItem("tableWorkspaceId", workspaceId);
+                      } else {
+                        e.preventDefault();
+                        Swal.fire({
+                          title: "Peringatan",
+                          text: "Silakan pilih workspace terlebih dahulu!",
+                        });
+                      }
+                    }}
                   >
                     <img
                       src={Table}
@@ -401,7 +503,7 @@ const Sidebar = () => {
 
             <div className="mb-4">
               <h3
-                className={`font-bold uppercase text-sm mb-2 xl:text-lg ${
+                className={`font-bold flex justify-between items-center uppercase text-sm mb-2 xl:text-lg ${
                   isCollapsed ? "hidden" : "block"
                 }`}
               >
@@ -415,75 +517,83 @@ const Sidebar = () => {
               </h3>
               <ul
                 className={`${
-                  isCollapsed ? "h-auto" : "h-14 overflow-y-auto custom-scroll"
+                  isCollapsed ? "h-auto" : "h-40 overflow-y-auto custom-scroll"
                 }`}
               >
                 {loading ? (
-                  <li className="text-center">Loading workspaces...</li>
+                  <LoadingSpinner />
                 ) : error ? (
                   <li className="text-center text-red-500">{error}</li>
                 ) : Array.isArray(boards) && boards.length > 0 ? (
                   boards.map((workspace) => (
-                    <li
-                      key={workspace.id}
-                      className="mb-2 flex items-center justify-between"
-                    >
+                    <li key={workspace.id} className="mb-2">
                       <NavLink
                         to={`/Dasboard-Proyek/${workspace.id}`}
                         className={({ isActive }) =>
-                          `flex items-center px-2 py-1 rounded text-xs hover:bg-secondary-blue ${
+                          `flex w-full items-center justify-between px-2 py-2 rounded text-xs hover:bg-secondary-blue ${
                             isActive ? "bg-secondary-blue" : ""
                           }`
                         }
                         onClick={() =>
-                          localStorage.setItem("workspaceId", workspace.id)
+                          localStorage.setItem(
+                            "workspaceId",
+                            String(workspace.id)
+                          )
                         }
                       >
-                        <div>
+                        <div className="flex items-center space-x-2">
                           <span
-                            className={`bg-gradient-to-r ${workspace.color} w-4 h-4 rounded`}
+                            className={`w-4 h-4 bg-gradient-to-r rounded ${workspace.colour}`}
                           ></span>
-                          <span
-                            className={`xl:text-base ${
-                              isCollapsed ? "hidden" : "ml-2"
-                            }`}
-                          >
-                            {workspace.workspace}
-                          </span>
+                          {!isCollapsed && (
+                            <span className="xl:text-base">
+                              {workspace.workspace}
+                            </span>
+                          )}
                         </div>
+
+                        {/* Bagian Kanan (Edit & Delete Buttons) */}
+                        {!isCollapsed && (
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleEditWorkspace(workspace);
+                              }}
+                              className="text-blue-500 hover:text-blue-700"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path d="M17.414 2.586a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H4a1 1 0 01-1-1v-2.586a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0z" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleDeleteWorkspace(workspace);
+                              }}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M6 2a1 1 0 00-.894.553L4.382 4H3a1 1 0 000 2h1v9a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-1.382l-.724-1.447A1 1 0 0014 2H6zm2 5a1 1 0 112 0v6a1 1 0 11-2 0V7zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V7z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        )}
                       </NavLink>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleEditWorkspace(workspace)}
-                          className="text-blue-500 hover:text-blue-700"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M17.414 2.586a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H4a1 1 0 01-1-1v-2.586a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0z" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => handleDeleteWorkspace(workspace)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M6 2a1 1 0 00-.894.553L4.382 4H3a1 1 0 000 2h1v9a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-1.382l-.724-1.447A1 1 0 0014 2H6zm2 5a1 1 0 112 0v6a1 1 0 11-2 0V7zm4 0a1 1 0 112 0v6a1 1 0 11-2 0V7z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </button>
-                      </div>
                     </li>
                   ))
                 ) : (

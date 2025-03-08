@@ -15,9 +15,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Dasboard" element={<Dasboard />} />
-        <Route path="/Dasboard-Member" element={<DasboardM />} />
+        <Route path="/Dasboard-Member/:id" element={<DasboardM />} />
         <Route path="/Dasboard-Setting" element={<DasboardS />} />
-        <Route path="/Dasboard-Table" element={<DasboardT />} />
+        <Route path="/Dasboard-Table/:id" element={<DasboardT />} />
         <Route path="/Dasboard-Calendar" element={<DasboardC/>} />
         <Route path="/Dasboard-Proyek/:id" element={<DasboardP/>} />
         <Route path="/Login" element={<Login />} />

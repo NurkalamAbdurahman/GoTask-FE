@@ -1,11 +1,10 @@
 import axios from "axios";
 
-const BASE_API_URL = "http://127.0.0.1:8000/api/boards";
-const API_URL = "http://127.0.0.1:8000/api/cards";
+const BASE_API_URL = "http://127.0.0.1:8000/api/cards";
 
 export const getCard = async (boardId, token) => {
   try {
-    const response = await axios.get(`${BASE_API_URL}/${boardId}/cards`, {
+    const response = await axios.get(`${BASE_API_URL}/boards/${boardId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -19,7 +18,7 @@ export const getCard = async (boardId, token) => {
 
 export const createCard = async (boardId, title, token) => {
   try {
-    const response = await fetch(`${BASE_API_URL}/${boardId}/cards`, {
+    const response = await fetch(`${BASE_API_URL}/boards/${boardId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,52 +39,63 @@ export const createCard = async (boardId, title, token) => {
   }
 };
 
-// cardService.js
-export const updateCard = async (id, updatedData, token) => {
+export const updateCard = async (id, body, token, isFormData = false) => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updatedData),
-    });
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "X-HTTP-Method-Override": "PUT",
+    };
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Gagal memperbarui card");
+    if (!isFormData) {
+      headers["Content-Type"] = "application/json";
+      body = JSON.stringify(body);
     }
 
-    return await response.json();
+    const response = await fetch(`${BASE_API_URL}/${id}`, {
+      method: "POST",
+      headers,
+      body,
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Gagal update");
+
+    return data;
   } catch (error) {
     console.error("Error updating card:", error);
     throw error;
   }
 };
 
-// export const updateCard = async (id, updatedData, token) => {
-//   try {
-//     const response = await axios.put(
-//       `${API_URL}/${id}`,
-//       updatedData,
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error updating card:", error);
-//     throw new Error("Gagal memperbarui kartu");
-//   }
-// };
+
+export const moveCard = async (id, body, token) => {
+  try {
+    const response = await fetch(`${BASE_API_URL}/${id}/move`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-HTTP-Method-Override": "PUT",
+      },
+      body,
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Gagal memindahkan card");
+
+    return data;
+  } catch (error) {
+    console.error("Error memindahkan card:", error);
+    throw error;
+  }
+};
+
+
+
 
 export const deleteCard = async (id, token) => {
   try {
-    const response = await axios.delete(`${API_URL}/${id}`, {
+    const response = await axios.delete(`${BASE_API_URL}/${id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

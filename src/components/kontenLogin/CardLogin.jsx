@@ -29,6 +29,9 @@ const CardLogin = () => {
       });
 
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('username', response.data.user.username);
+      localStorage.setItem('member', response.data.user.member);
+      console.log(response.data);
 
       Swal.fire({
         icon: 'success',

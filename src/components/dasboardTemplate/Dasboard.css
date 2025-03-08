@@ -62,3 +62,8 @@
     conic-gradient(at calc(var(--s) + 2*var(--r)) calc(var(--s) + 2*var(--r)),
      #000 75%,#0000 0);
 }
+
+.bg-merah-kuning { background: linear-gradient(to right, #ef4444, #eab308); }
+.bg-biru-hijau { background: linear-gradient(to right, #3b82f6, #22c55e); }
+.bg-ungu-pink-merah { background: linear-gradient(to right, #8b5cf6, #ec4899, #ef4444); }
+.bg-abu-abu-hitam { background: linear-gradient(to right, #6b7280, #374151, #000); }

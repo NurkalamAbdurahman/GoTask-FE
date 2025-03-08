@@ -1,4 +1,4 @@
-import Profil from "../dasboardMember/Profil";
+// import Profil from "../dasboardMember/Profil";
 import Setting from "./setting";
 
 const DasboardSetting = () => {
@@ -26,7 +26,7 @@ const DasboardSetting = () => {
           G
         </div>
         <div className="w-full lg:w-1/2 flex flex-col gap-2">
-          <Profil />
+          {/* <Profil /> */}
         </div>
       </div>
       <Setting/>

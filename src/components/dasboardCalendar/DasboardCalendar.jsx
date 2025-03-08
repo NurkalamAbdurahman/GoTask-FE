@@ -1,4 +1,4 @@
-import Profil from "../dasboardMember/Profil";
+// import Profil from "../dasboardMember/Profil";
 import FilterCalendar from "./FilterCalendar";
 import KontenCalendar from "./KontenCalendar";
 
@@ -13,7 +13,7 @@ const DasboardCalendar = () => {
           G
         </div>
         <div className="w-full lg:w-1/2 flex flex-col gap-2">
-          <Profil />
+          {/* <Profil /> */}
         </div>
       </div>
       <KontenCalendar/>

@@ -7,6 +7,9 @@ export const useLogout = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem("boardID");
+    localStorage.removeItem("boardId");
+    localStorage.removeItem("boardIDs");
+    localStorage.removeItem("tableWorkspaceId");
     localStorage.removeItem("workspaceId");
     Swal.fire({
       icon: 'success',
