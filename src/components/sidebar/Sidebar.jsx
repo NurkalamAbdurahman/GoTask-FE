@@ -122,16 +122,14 @@ const Sidebar = () => {
           if (newWorkspace && newWorkspace.id && newWorkspace.workspace) {
             setBoards([...boards, newWorkspace]);
             Swal.fire({
-              title: "Berhasil",
-              text: response.message,
-              timer: 2000,
-              showConfirmButton: false,
+              title: "Berhasil! ✅",
+              html: `<p class="text-blue-100">Workspace <strong>${title}</strong> berhasil dibuat</p>`,
               background: "#1B262C",
               customClass: {
-                title: "text-2xl font-bold text-blue-100",
-                popup: "rounded-xl border-2 border-blue-400",
+                popup: "border-2 border-blue-400",
               },
-
+              timer: 2000,
+              showConfirmButton: false,
             });
           } else {
             throw new Error("Response tidak valid dari server");
@@ -139,11 +137,13 @@ const Sidebar = () => {
         } catch (error) {
           console.error("Gagal membuat workspace:", error);
           Swal.fire({
-            title: "Gagal Membuat Workspace",
-            text:
-              error.response?.data?.message ||
-              error.message ||
-              "Terjadi kesalahan saat membuat workspace. Silakan coba lagi.",
+            title: "Gagal! ❌",
+            html: `<p class="text-blue-100">Gagal membuat workspace: <br/> <span class="text-red-400">${title}</span></p>`,
+            background: "#1B262C",
+            customClass: {
+              title: "text-blue-100",
+              popup: "border-2 border-red-400",
+            },
           });
         }
       }
@@ -201,10 +201,9 @@ const Sidebar = () => {
 
           Swal.fire({
             title: "Berhasil! ✅",
-            text: `Workspace "${newName}" berhasil diperbarui`,
+            html: `<p class="text-blue-100">Workspace <strong>${newName}</strong> berhasil diperbarui</p>`,
             background: "#1B262C",
             customClass: {
-              title: "text-blue-100",
               popup: "border-2 border-blue-400",
             },
             timer: 2000,
@@ -213,7 +212,7 @@ const Sidebar = () => {
         } catch (error) {
           Swal.fire({
             title: "Gagal! ❌",
-            html: `<p class="text-blue-100">Gagal menghapus workspace: <br/> <span class="text-red-400">Anda Tidak Memiliki AKSES!!!</span></p>`,
+            html: `<p class="text-blue-100">Gagal membuat workspace: <br/> <span class="text-red-400">${newName}</span></p>`,
             background: "#1B262C",
             customClass: {
               title: "text-blue-100",
@@ -263,7 +262,7 @@ const Sidebar = () => {
           });
         } catch (error) {
           Swal.fire({
-            title: "Gagal! ⚠️",
+            title: "Gagal! ❌",
             html: `<p class="text-blue-100">Gagal menghapus workspace: <br/> <span class="text-red-400">Anda Tidak Memiliki AKSES!!!</span></p>`,
             background: "#1B262C",
             customClass: {
@@ -343,21 +342,11 @@ const Sidebar = () => {
           </button>
         </div>
 
-        {!isCollapsed && (
-          <div>
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full p-2 py-1 border border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg"
-            />
-          </div>
-        )}
-
         <div className="p-2 border border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg">
           <nav className={`${isCollapsed ? "px-0" : "px-4"} flex-1`}>
             <div className="mb-4">
               <h3
-                className={`font-bold uppercase text-sm mb-2 xl:text-lg ${
+                className={`font-bold flex justify-between items-center uppercase mb-2 text-sm 2xl:text-base ${
                   isCollapsed ? "hidden" : "block"
                 }`}
               >
@@ -379,7 +368,7 @@ const Sidebar = () => {
                       className="object-cover w-3 2xl:w-5"
                     />
                     <span
-                      className={`xl:text-base ${
+                      className={`text-sm 2xl:text-base ${
                         isCollapsed ? "hidden" : "ml-2"
                       }`}
                     >
@@ -407,6 +396,7 @@ const Sidebar = () => {
                         Swal.fire({
                           title: "Peringatan",
                           text: "Silakan pilih workspace terlebih dahulu!",
+
                         });
                       }
                     }}
@@ -417,7 +407,7 @@ const Sidebar = () => {
                       className="object-cover w-3 2xl:w-5"
                     />
                     <span
-                      className={`xl:text-base ${
+                      className={`text-sm 2xl:text-base ${
                         isCollapsed ? "hidden" : "ml-2"
                       }`}
                     >
@@ -453,7 +443,7 @@ const Sidebar = () => {
 
             <div className="mb-4">
               <h3
-                className={`font-bold uppercase text-sm mb-2 xl:text-lg ${
+                className={`font-bold flex justify-between items-center uppercase mb-2 text-sm 2xl:text-base ${
                   isCollapsed ? "hidden" : "block"
                 } flex justify-between items-center`}
               >
@@ -490,7 +480,7 @@ const Sidebar = () => {
                       className="object-cover w-3 2xl:w-5"
                     />
                     <span
-                      className={`xl:text-base ${
+                      className={`text-sm 2xl:text-base ${
                         isCollapsed ? "hidden" : "ml-2"
                       }`}
                     >
@@ -503,7 +493,7 @@ const Sidebar = () => {
 
             <div className="mb-4">
               <h3
-                className={`font-bold flex justify-between items-center uppercase text-sm mb-2 xl:text-lg ${
+                className={`font-bold flex justify-between items-center uppercase mb-2 text-sm 2xl:text-base ${
                   isCollapsed ? "hidden" : "block"
                 }`}
               >
@@ -517,7 +507,7 @@ const Sidebar = () => {
               </h3>
               <ul
                 className={`${
-                  isCollapsed ? "h-auto" : "h-40 overflow-y-auto custom-scroll"
+                  isCollapsed ? "h-auto" : "h-60 overflow-y-auto custom-scroll"
                 }`}
               >
                 {loading ? (
@@ -546,13 +536,13 @@ const Sidebar = () => {
                             className={`w-4 h-4 bg-gradient-to-r rounded ${workspace.colour}`}
                           ></span>
                           {!isCollapsed && (
-                            <span className="xl:text-base">
+                            <span className="text-sm 2xl:text-base">
                               {workspace.workspace}
                             </span>
                           )}
                         </div>
 
-                        {/* Bagian Kanan (Edit & Delete Buttons) */}
+                        
                         {!isCollapsed && (
                           <div className="flex space-x-2">
                             <button
@@ -608,7 +598,7 @@ const Sidebar = () => {
           <div>
             <button
               onClick={handleLogout}
-              className="w-full px-2 py-1 bg-red-700 rounded-lg hover:bg-red-900 2xl:text-base"
+              className="w-full px-2 py-1 bg-red-700 rounded-lg hover:bg-red-900 text-sm 2xl:text-base"
             >
               Logout
             </button>

@@ -2,7 +2,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getUser, inviteUser } from "../CRUD/Users/userService";
 import Swal from "sweetalert2";
-import { getWorkspaces, updateWorkspace } from "../CRUD/Workspaces/workspaceService";
+import {
+  getWorkspaces,
+  updateWorkspace,
+} from "../CRUD/Workspaces/workspaceService";
 import { LoadingSpinner } from "../Lainnya/Loading";
 
 const FooterD = () => {
@@ -12,6 +15,7 @@ const FooterD = () => {
   const [loading, setLoading] = useState(true);
   const currentUsername = localStorage.getItem("username");
   const [error, setError] = useState(null);
+  const [members, setMembers] = useState([]);
 
   const token = localStorage.getItem("token");
   const workspaceId = localStorage.getItem("workspaceId");
@@ -23,48 +27,63 @@ const FooterD = () => {
         setLoading(false);
         return;
       }
-  
+
       try {
         const workspaces = await getWorkspaces(token);
-        console.log("workspaceId:", workspaceId);
-        console.log("workspaces:", workspaces);
-  
         if (!workspaces || workspaces.length === 0) {
           throw new Error("Tidak ada workspace tersedia");
         }
-  
+
         const selectedWorkspace = workspaces.find(
           (w) => String(w.id) === workspaceId
         );
-  
+
         if (!selectedWorkspace) {
           throw new Error("Workspace tidak ditemukan");
         }
-  
+
         setWorkspace(selectedWorkspace);
-  
+
         const usersData = await getUser(token);
-        // Filter out current user and format usernames
         const filteredUsers = (usersData || []).filter(
-          user => user.username !== currentUsername
+          (user) => user.username !== currentUsername
         );
         setUsers(filteredUsers);
-        
-        console.log("Users loaded:", filteredUsers); // Debug log
       } catch (err) {
-        console.error("Fetch data error:", err);
         setError(
           err.response?.data?.message ||
-          err.message ||
-          "Terjadi kesalahan saat mengambil data"
+            err.message ||
+            "Terjadi kesalahan saat mengambil data"
         );
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [token, workspaceId, currentUsername]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const workspaces = await getWorkspaces(token);
+        const selectedWorkspace = workspaces.find(
+          (w) => String(w.id) === workspaceId
+        );
+
+        if (selectedWorkspace) {
+          setWorkspace(selectedWorkspace);
+          setMembers(selectedWorkspace.member || []);
+        }
+      } catch (err) {
+        setError(err.message || "Terjadi kesalahan saat mengambil data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [token, workspaceId]);
 
   const handleEditWorkspace = () => {
     Swal.fire({
@@ -94,26 +113,18 @@ const FooterD = () => {
       preConfirm: () => {
         const input = document.getElementById("swal-edit-workspace");
         const value = input.value.trim();
-  
         if (!value) {
           Swal.showValidationMessage("Nama workspace tidak boleh kosong!");
           return false;
         }
-  
         return value;
       },
     }).then(async (result) => {
       if (result.isConfirmed) {
         const newName = result.value;
         try {
-          const token = localStorage.getItem("token");
           await updateWorkspace(workspace.id, { workspace: newName }, token);
-  
-          setWorkspace((prev) => ({
-            ...prev,
-            workspace: newName,
-          }));
-  
+          setWorkspace((prev) => ({ ...prev, workspace: newName }));
           Swal.fire({
             title: "Berhasil! ✅",
             text: `Workspace "${newName}" berhasil diperbarui`,
@@ -135,26 +146,12 @@ const FooterD = () => {
               popup: "border-2 border-red-400",
             },
           });
-          console.error("Update error:", error);
         }
       }
     });
   };
 
   const handleShareProject = async () => {
-    const token = localStorage.getItem("token"); 
-    const workspaceId = localStorage.getItem("workspaceId");
-  
-    if (!token || !workspaceId) {
-      Swal.fire({
-        title: "Akses Ditolak",
-        text: "Token atau Workspace ID tidak ditemukan. Silakan login dan pilih workspace terlebih dahulu!",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-      return;
-    }
-
     if (!users || users.length === 0) {
       Swal.fire({
         title: "Tidak Ada User",
@@ -164,7 +161,7 @@ const FooterD = () => {
       });
       return;
     }
-  
+
     Swal.fire({
       title: "👥 Share Project",
       html: `
@@ -176,11 +173,15 @@ const FooterD = () => {
             id="swal-username" 
             class="w-full px-4 py-2 rounded-lg bg-primary-blue focus:ring-blue-500 text-white appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjYmZjMGRmIiBkPSJNMTIgMTUuNWwzLjUtMy41aC03eiIvPjwvc3ZnPg==')] bg-no-repeat bg-[right_1rem_center]"
           >
-            ${users.map(user => `
+            ${users
+              .map(
+                (user) => `
               <option value="${user.username}" class="bg-primary-blue hover:bg-blue-600 text-blue-300 text-sm">
                 ${user.username}
               </option>
-            `).join("")}
+            `
+              )
+              .join("")}
           </select>
         </div>
       `,
@@ -190,20 +191,20 @@ const FooterD = () => {
       preConfirm: async () => {
         const select = document.getElementById("swal-username");
         const username = select.value.trim();
-        
+
         if (!username) {
           Swal.showValidationMessage("Username harus diisi!");
           return false;
         }
-  
+
         try {
-          console.log("Inviting user:", username); // Debug log
           await inviteUser(workspaceId, username, token);
           return username;
         } catch (error) {
-          console.error("Invite error:", error); // Debug log
           Swal.showValidationMessage(
-            error.response?.data?.message || error.message || "Gagal mengundang user"
+            error.response?.data?.message ||
+              error.message ||
+              "Gagal mengundang user"
           );
           return false;
         }
@@ -218,6 +219,38 @@ const FooterD = () => {
           showConfirmButton: false,
         });
       }
+    });
+  };
+
+  const handleMemberClick = (member) => {
+    Swal.fire({
+      html: `
+        <div class="flex flex-col items-center p-6">
+          <div class="w-32 h-32 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-6xl font-bold text-white shadow-lg mb-5">
+            ${member.name.charAt(0).toUpperCase()}
+          </div>
+          <h2 class="text-3xl font-extrabold mb-2">${member.name}</h2>
+          <p class="text-base text-gray-400 mb-1">@${member.username}</p>
+          <div class="w-full my-4 border-t border-gray-600"></div>
+          <div class="w-full text-left text-sm space-y-2">
+            <p><span class="font-semibold text-white">Divisi:</span> <span class="text-gray-400">${
+              member.division || "Belum di atur"
+            }</span></p>
+            <p><span class="font-semibold text-white">Kelas:</span> <span class="text-gray-400">${
+              member.class || "Belum diatur"
+            }</span></p>
+            <p><span class="font-semibold text-white">Email:</span> <span class="text-gray-400">${
+              member.email || "Tidak tersedia"
+            }</span></p>
+          </div>
+        </div>
+      `,
+      showConfirmButton: false,
+      showCloseButton: false,
+      background: "#1B262C",
+      customClass: {
+        popup: "rounded-xl border-2 border-blue-400 shadow-lg",
+      },
     });
   };
 
@@ -264,13 +297,48 @@ const FooterD = () => {
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex -space-x-2">
-          {currentUsername && (
-            <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold border-2 border-white">
-              {currentUsername
+          {members.map((memberId, index) => {
+            const user = users.find((user) => user.id === memberId);
+            if (user) {
+              const initials = user.username
                 .split(" ")
-                .map((n) => n[0])
+                .map((word) => word[0])
                 .join("")
-                .toUpperCase()}
+                .toUpperCase();
+
+              return (
+                <div
+                  key={index}
+                  className="relative group cursor-pointer"
+                  onClick={() => handleMemberClick(user)}
+                >
+                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold border-2 border-white">
+                    {initials}
+                  </div>
+                  <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-700 text-white text-xs px-2 py-1 rounded-md whitespace-nowrap">
+                    {user.username}
+                    <div className="absolute w-2 h-2 bg-gray-700 transform rotate-45 -bottom-1 left-1/2 -translate-x-1/2"></div>
+                  </div>
+                </div>
+              );
+            }
+          })}
+
+          {currentUsername && (
+            <div
+              className="relative group"
+            >
+              <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold border-2 border-white">
+                {currentUsername
+                  .split(" ")
+                  .map((word) => word[0])
+                  .join("")
+                  .toUpperCase()}
+              </div>
+              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-700 text-white text-xs px-2 py-1 rounded-md whitespace-nowrap">
+                {currentUsername}
+                <div className="absolute w-2 h-2 bg-gray-700 transform rotate-45 -bottom-1 left-1/2 -translate-x-1/2"></div>
+              </div>
             </div>
           )}
         </div>

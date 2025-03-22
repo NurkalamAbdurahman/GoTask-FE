@@ -206,8 +206,7 @@ const DashboardTable = () => {
         });
         return;
       }
-  
-      // Ambil daftar pengguna
+
       let users = [];
       try {
         users = await getUser(token);
@@ -221,8 +220,7 @@ const DashboardTable = () => {
         });
         return;
       }
-  
-      // Jika tidak ada user tersedia
+
       if (!users.length) {
         Swal.fire({
           title: "Tidak Ada Pengguna",
@@ -232,8 +230,7 @@ const DashboardTable = () => {
         });
         return;
       }
-  
-      // Menampilkan dialog untuk memilih anggota
+
       const { value: username } = await Swal.fire({
         title: "👥 Share Project",
         html: `
@@ -263,27 +260,26 @@ const DashboardTable = () => {
         preConfirm: async () => {
           const select = document.getElementById("swal-username");
           const username = select.value.trim();
-  
+
           if (!username) {
             Swal.showValidationMessage("Username harus dipilih!");
             return false;
           }
-  
+
           try {
-            // Memanggil fungsi inviteUser dengan format yang benar
             await inviteUser(workspaceId, username, token);
             return username;
           } catch (error) {
             Swal.showValidationMessage(
               error.response?.data?.message ||
-              error.message ||
-              "Gagal mengundang user"
+                error.message ||
+                "Gagal mengundang user"
             );
             return false;
           }
         },
       });
-  
+
       if (username) {
         Swal.fire({
           title: "Berhasil! 🎉",
@@ -303,8 +299,6 @@ const DashboardTable = () => {
       });
     }
   };
-  
-  
 
   return (
     <div className="lg:h-screen overflow-hidden w-[100%] 2xl:text-lg p-3 flex flex-col gap-2 py-5">
@@ -344,20 +338,22 @@ const DashboardTable = () => {
           G
         </div>
         <div className="lg:w-1/2 w-full flex flex-col gap-2">
-          <div className="inverted-profil flex justify-between items-center p-5 gap-4">
-            <div className="ml-4 w-1/2">
-              <div className="text-lg lg:text-2xl font-bold">GoTask</div>
-              <div className="text-sm lg:text-base text-gray-400">
+          <div className="inverted-profil flex justify-between items-center p-5 bg-secondary-blue/10 rounded-md shadow-sm">
+            <div className="flex flex-col w-4/5">
+              <p className="text-xl 2xl:text-2xl font-bold text-white">
+                GoTask
+              </p>
+              <p className="text-sm 2xl:text-lg text-gray-400">
                 Projek IT Club
-              </div>
+              </p>
             </div>
-            <div className="w-1/2 flex flex-col justify-center items-center gap-2">
-              <button
-                onClick={handleShareProject}
-                className="bg-blue-500 text-white w-full px-2 py-1 rounded-lg hover:bg-blue-600"
-              >
-                Invite Members
-              </button>
+            <div className="w-1/5">
+            <button
+              onClick={handleShareProject}
+              className="bg-blue-500 text-white w-full px-2 py-1 rounded-lg hover:bg-blue-600"
+            >
+              Invite
+            </button>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ import {
   deleteWorkspace,
 } from "../CRUD/Workspaces/workspaceService";
 import { LoadingSpinner } from "../Lainnya/Loading";
-import { getUser  } from "../CRUD/Users/userService";
+import { getUser } from "../CRUD/Users/userService";
 
 const availablecolours = [
   "from-red-900 to-gray-900",
@@ -24,19 +24,21 @@ const DasboardTemplate = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("Terbaru");
-  const [filterOption, setFilterOption] = useState("Pilih Koleksi");
   const token = localStorage.getItem("token");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredBoards, setFilteredBoards] = useState([]);
-  const [currentUser , setCurrentUser ] = useState(null); // State untuk menyimpan informasi pengguna saat ini
+  const [currentUser, setCurrentUser] = useState(null);
+  const [usernameFilter, setUsernameFilter] = useState("semua");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!token) throw new Error("Token tidak ditemukan");
-        const userData = await getUser (token);
-        const matchedUser  = userData.find(user => user.username === localStorage.getItem("username"));
-        setCurrentUser (matchedUser  || null);
+        const userData = await getUser(token);
+        const matchedUser = userData.find(
+          (user) => user.username === localStorage.getItem("username")
+        );
+        setCurrentUser(matchedUser || null);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -78,11 +80,9 @@ const DasboardTemplate = () => {
         );
       }
 
-      if (filterOption && filterOption !== "Pilih Koleksi") {
+      if (usernameFilter !== "semua") {
         result = result.filter(
-          (workspace) =>
-            workspace.colour ===
-            availablecolours.find((c) => c.includes(filterOption.split(" ")[1]))
+          (workspace) => workspace.username === usernameFilter
         );
       }
 
@@ -101,7 +101,12 @@ const DasboardTemplate = () => {
     };
 
     applyFiltersAndSorting();
-  }, [boards, searchQuery, filterOption, sortOption]);
+  }, [boards, searchQuery, sortOption, usernameFilter]);
+
+  // Ambil daftar username unik untuk filter
+  const uniqueUsernames = [
+    ...new Set(boards.map((workspace) => workspace.username)),
+  ];
 
   const handleAddWorkspaceClick = () => {
     Swal.fire({
@@ -151,16 +156,22 @@ const DasboardTemplate = () => {
       if (result.isConfirmed) {
         const { title, colour } = result.value;
         try {
+          const token = localStorage.getItem("token");
           const response = await createWorkspace(title, colour, token);
           const newWorkspace = response.workspace;
           console.log("Workspace berhasil dibuat:", newWorkspace);
           if (newWorkspace && newWorkspace.id && newWorkspace.workspace) {
-            setBoards((prev) => [...prev, newWorkspace]);
+            setBoards([...boards, newWorkspace]);
             Swal.fire({
-              title: "Berhasil",
+              title: "Berhasil! 🎉",
               text: response.message,
               timer: 2000,
               showConfirmButton: false,
+              background: "#1B262C",
+              customClass: {
+                title: "text-2xl font-bold text-blue-100",
+                popup: "rounded-xl border-2 border-blue-400",
+              },
             });
           } else {
             throw new Error("Response tidak valid dari server");
@@ -201,7 +212,7 @@ const DasboardTemplate = () => {
       if (result.isConfirmed) {
         try {
           await deleteWorkspace(workspace.id, token);
-          setBoards((prev) => prev.filter((ws) => ws .id !== workspace.id));
+          setBoards((prev) => prev.filter((ws) => ws.id !== workspace.id));
 
           Swal.fire({
             title: "Terhapus! 🗑️",
@@ -305,27 +316,38 @@ const DasboardTemplate = () => {
   };
 
   const showProfileModal = () => {
-    if (!currentUser ) return;
+    if (!currentUser) return;
 
     Swal.fire({
       customClass: {
-        popup: "bg-[#1B262C] text-white rounded-xl shadow-2xl p-0 overflow-hidden",
+        popup:
+          "bg-[#1B262C] text-white rounded-xl shadow-2xl p-0 overflow-hidden",
       },
       html: `
         <div class="flex flex-col items-center p-6">
           <div class="w-32 h-32 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-6xl font-bold text-white shadow-lg mb-5">
-            ${currentUser .name ? currentUser .name.charAt(0).toUpperCase() : "?"}
+            ${currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "?"}
           </div>
 
-          <h2 class="text-3xl font-extrabold mb-2">${currentUser .name || "Tidak tersedia"}</h2>
-          <p class="text-base text-gray-400 mb-1">@${currentUser .username || "Tidak tersedia" }</p>
+          <h2 class="text-3xl font-extrabold mb-2">${
+            currentUser.name || "Tidak tersedia"
+          }</h2>
+          <p class="text-base text-gray-400 mb-1">@${
+            currentUser.username || "Tidak tersedia"
+          }</p>
 
           <div class="w-full my-4 border-t border-gray-600"></div>
 
           <div class="w-full text-left text-sm space-y-2">
-            <p><span class="font-semibold text-white">Divisi:</span> <span class="text-gray-400">${currentUser .division || "Belum diatur"}</span></p>
-            <p><span class="font-semibold text-white">Kelas:</span> <span class="text-gray-400">${currentUser .class || "Belum diatur"}</span></p>
-            <p><span class="font-semibold text-white">Email:</span> <span class="text-gray-400">${currentUser .email || "Tidak tersedia"}</span></p>
+            <p><span class="font-semibold text-white">Divisi:</span> <span class="text-gray-400">${
+              currentUser.division || "Belum diatur"
+            }</span></p>
+            <p><span class="font-semibold text-white">Kelas:</span> <span class="text-gray-400">${
+              currentUser.class || "Belum diatur"
+            }</span></p>
+            <p><span class="font-semibold text-white">Email:</span> <span class="text-gray-400">${
+              currentUser.email || "Tidak tersedia"
+            }</span></p>
           </div>
 
           <div class="mt-6 w-full flex justify-end">
@@ -346,83 +368,238 @@ const DasboardTemplate = () => {
   };
 
   return (
-    <div className="lg:h-screen overflow-hidden h-auto w-[100%] p-3">
-      <div className="flex w-full lg:relative flex-col lg:flex-row justify-center items-center gap-2 ">
+    <div className="lg:h-screen overflow-hidden h-auto w-full p-3">
+      <div className="flex w-full lg:relative flex-col lg:flex-row justify-center items-center gap-2">
         <div className="lg:w-1/2 w-full">
-          <div className="inner-dasboard w-full px-10 py-5">
-            <h3 className="text-xl lg:text-3xl font-bold mb-4">Board</h3>
-            <ul className="list-disc text-sm lg:text-base text-gray-400 mb-4 leading-relaxed">
-              <li className="pb-1">Tetap terorganisir: Semua tugasmu jadi lebih mudah dilacak.</li>
-              <li className="pb-1">Meningkatkan produktivitas: Kamu bisa fokus pada tugas yang paling penting.</li>
-              <li className="pb-1">Bekerja sama dengan tim: Kamu bisa mengajak teman atau rekan kerja untuk bekerja sama dalam satu papan.</li>
+          <div className="inner-dasboard w-full px-8 py-6 bg-gray-800 rounded-lg shadow-lg">
+            <h3 className="flex items-center font-semibold text-base sm:text-lg lg:text-xl uppercase mb-4 border-b border-gray-700 pb-2">
+              Board
+            </h3>
+            <ul className="space-y-3">
+              <li className="flex items-start transition-colors duration-200 hover:text-blue-400">
+                <span className="flex-shrink-0 mt-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-4 h-4 text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </span>
+                <span className="ml-2 text-sm 2xl:text-lg text-gray-400">
+                  Tetap terorganisir: Semua tugasmu jadi lebih mudah dilacak.
+                </span>
+              </li>
+              <li className="flex items-start transition-colors duration-200 hover:text-blue-400">
+                <span className="flex-shrink-0 mt-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-4 h-4 text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </span>
+                <span className="ml-2 text-sm 2xl:text-lg text-gray-400">
+                  Meningkatkan produktivitas: Fokus pada tugas paling penting.
+                </span>
+              </li>
+              <li className="flex items-start transition-colors duration-200 hover:text-blue-400">
+                <span className="flex-shrink-0 mt-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-4 h-4 text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </span>
+                <span className="ml-2 text-sm 2xl:text-lg text-gray-400">
+                  Bekerja sama dengan tim: Ajak rekan untuk kolaborasi dalam
+                  satu papan.
+                </span>
+              </li>
             </ul>
           </div>
         </div>
-        <div className="w-14 h-14 absolute hidden top-[4.8rem] bg-primary-blue text-white rounded-full lg:flex items-center justify-center text-2xl font-bold">G</div>
+
+        <div className="w-14 h-14 absolute hidden top-[4.8rem] bg-primary-blue text-white rounded-full lg:flex items-center justify-center text-2xl font-bold">
+          G
+        </div>
+
         <div className="lg:w-1/2 flex flex-col w-full gap-2">
-          <div className="inverted-profil flex justify-between items-center p-5">
-            <div className="ml-4 w-2/3">
-              <p className="text-xl font-bold 2xl:text-2xl">GoTask</p>
-              <p className="text-sm text-gray-400 2xl:text-lg">Projek IT Club</p>
+          <div className="inverted-profil flex justify-between items-center p-5 bg-secondary-blue/10 rounded-md shadow-sm">
+            <div className="flex flex-col">
+              <p className="text-xl 2xl:text-2xl font-bold text-white">
+                GoTask
+              </p>
+              <p className="text-sm 2xl:text-lg text-gray-400">
+                Projek IT Club
+              </p>
             </div>
-            <div className="w-1/3 flex flex-col justify-center items-center gap-1">
-              <button onClick={showProfileModal} className="bg-blue-500 text-white w-full px-2 py-1 rounded-lg hover:bg-blue-600">Lihat Profil</button>
-            </div>
+            <button
+              onClick={showProfileModal}
+              className="mt-4 sm:mt-0 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-sm"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11V5H9v2H7v2h2v2h2v-2h2V7h-2z" />
+              </svg>
+              <span className="text-sm 2xl:text-lg ">Lihat Profil</span>
+            </button>
           </div>
-          <div className="inverted-search">
-            <div className="p-7 rounded-md flex flex-col 2xl:text-base text-xs gap-2">
-              <div className="flex flex-col gap-2 w-full">
-                <label className="font-semibold 2xl:text-lg text-sm">Pencarian</label>
+
+          <div className="inverted-search bg-secondary-blue/10 rounded-md flex justify-center items-center flex-col shadow-sm">
+            <div className="p-4 flex flex-col gap-4 w-full">
+              <div className="flex flex-col gap-1">
+                <label className="font-medium text-sm text-gray-200 tracking-wide">
+                  Pencarian
+                </label>
                 <div className="relative">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.65 10.65a7.5 7.5 0 006.5 6.5z"
+                      />
+                    </svg>
+                  </span>
                   <input
                     type="text"
                     placeholder="Cari Boards"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-4 py-1 rounded-md bg-secondary-blue text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-8 pr-3 py-2 text-sm rounded-md 
+                   bg-secondary-blue text-white placeholder-gray-200
+                   focus:outline-none focus:ring-2 focus:ring-blue-500
+                   transition-colors duration-200"
                   />
                 </div>
               </div>
-              <div className="flex justify-center items-center gap-2">
-                <div className="flex flex-col gap-2 w-full">
-                  <label className="font-semibold 2xl:text-lg text-sm">Urutkan berdasarkan</label>
-                  <select
-                    value={sortOption}
-                    onChange={(e) => setSortOption(e.target.value)}
-                    className="w-full py-1 px-4 rounded-md bg-secondary-blue text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="Terbaru">Terbaru</option>
-                    <option value="Terlama">Terlama</option>
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2 w-full">
-                  <label className="font-semibold 2xl:text-lg text-sm">Filter berdasarkan</label>
-                  <select
-                    value={filterOption}
-                    onChange={(e) => setFilterOption(e.target.value)}
-                    className="w-full py-1 px-4 rounded-md bg-secondary-blue text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="Pilih Koleksi">Pilih Warna</option>
-                    <option value="Koleksi Merah">Merah-Kuning</option>
-                    <option value="Koleksi Biru">Biru-Hijau</option>
-                    <option value="Koleksi Ungu">Ungu-Pink-Merah</option>
-                    <option value="Koleksi Abu">Abu-Abu-Hitam</option>
-                  </select>
-                </div>
-              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+      {/* Sort */}
+      <div className="flex flex-col gap-1 w-full">
+        <label className="font-medium text-sm text-gray-200 tracking-wide">
+          Urutkan berdasarkan
+        </label>
+        <div className="relative">
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="w-full py-2 px-3 text-sm rounded-md bg-secondary-blue text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 appearance-none"
+          >
+            <option value="Terbaru">Terbaru</option>
+            <option value="Terlama">Terlama</option>
+          </select>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1 w-full">
+        <label className="font-medium text-sm text-gray-200 tracking-wide">
+          Filter berdasarkan
+        </label>
+        <div className="relative">
+          <select
+            value={usernameFilter}
+            onChange={(e) => setUsernameFilter(e.target.value)}
+            className="w-full py-2 px-3 text-sm rounded-md bg-secondary-blue text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 appearance-none"
+          >
+            <option value="semua">Semua</option>
+            {uniqueUsernames.map((username) => (
+              <option key={username} value={username}>
+                {username}
+              </option>
+            ))}
+          </select>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
             </div>
           </div>
         </div>
       </div>
+
       <div className="flex flex-wrap justify-start mt-5 items-center gap-5 p-2 overflow-y-auto custom-scroll h-80">
-        <div className="w-full sm:w-[48%] md:w-[48%] xl:w-[32%] border-2 p-4 border-primary-blue bg-secondary-blue bg-opacity-10 h-28 rounded-md">
+        <div className="w-full sm:w-[48%] md:w-[48%] xl:w-[32%] p-4 h-28 rounded-md bg-secondary-blue/10 border border-primary-blue/30 shadow-sm">
           <div className="h-3/4 flex justify-center items-center">
-            <button onClick={handleAddWorkspaceClick}>+</button>
+            <button
+              onClick={handleAddWorkspaceClick}
+              className="text-3xl text-white hover:text-blue-400 transition-colors"
+            >
+              +
+            </button>
           </div>
-          <div className="h-1/4 flex justify-start items-start">
-            <p>Buat board baru</p>
+          <div className="h-1/4 flex items-start">
+            <p className="text-white text-sm">Buat board baru</p>
           </div>
         </div>
+
         {loading ? (
           <LoadingSpinner />
         ) : error ? (
@@ -440,32 +617,34 @@ const DasboardTemplate = () => {
                 }
               >
                 <div
-                  className={`w-full p-4 h-28 rounded-md bg-gradient-to-r ${
+                  className={`w-full p-4 h-28 rounded-md shadow-sm bg-gradient-to-r ${
                     workspace.colour || "bg-gray-700"
                   }`}
                 >
                   <div className="flex justify-start items-center">
-                    <p>{workspace.workspace}</p>
+                    <p className="text-white text-sm font-semibold">
+                      {workspace.workspace}
+                    </p>
                   </div>
                 </div>
               </NavLink>
-              <div className="flex justify-between items-center">
-                <span className="border-primary-blue bg-secondary-blue bg-opacity-10 rounded-md px-3">
+              <div className="flex justify-between items-center mt-1">
+                <span className="border border-primary-blue/30 bg-secondary-blue/10 rounded-md px-3 py-1 text-sm text-white">
                   {workspace.username}
                 </span>
-                <div className="flex justify-end">
+                <div className="flex gap-2">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEditWorkspace(workspace);
                     }}
-                    className="text-blue-500 hover:text-blue-700"
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"
                       viewBox="0 0 20 20"
-                      fill="currentcolor"
+                      fill="currentColor"
                     >
                       <path d="M17.414 2.586a2 2 0 010 2.828l-10 10a2 2 0 01-1.414.586H4a1 1 0 01-1-1v-2.586a2 2 0 01.586-1.414l10-10a2 2 0 012.828 0z" />
                     </svg>
@@ -475,13 +654,13 @@ const DasboardTemplate = () => {
                       e.stopPropagation();
                       handleDeleteWorkspace(workspace);
                     }}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-red-400 hover:text-red-300 transition-colors"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-5 w-5"
                       viewBox="0 0 20 20"
-                      fill="currentcolor"
+                      fill="currentColor"
                     >
                       <path
                         fillRule="evenodd"
@@ -496,7 +675,7 @@ const DasboardTemplate = () => {
           ))
         ) : (
           <div className="w-full text-center py-4">
-            <p>Belum ada workspace</p>
+            <p className="text-white">Belum ada workspace</p>
           </div>
         )}
       </div>

@@ -750,7 +750,7 @@ const Board = () => {
                   className="flex flex-col border border-primary-blue bg-secondary-blue bg-opacity-10 rounded-lg p-4 w-72"
                 >
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold">{list.nama}</h2>
+                    <h2 className="font-bold flex justify-between items-center uppercase mb-2 text-sm 2xl:text-base">{list.nama}</h2>
                     <div className="text-white text-lg cursor-pointer flex justify-end gap-2">
                       <button
                         onClick={() => handleUpdateBoard(list)}
@@ -758,7 +758,7 @@ const Board = () => {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="h-4 w-4"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -859,7 +859,7 @@ const Board = () => {
                     </SortableContext>
 
                     <button
-                      className="text-start text-white mt-4 py-2"
+                      className="text-start text-sm text-white mt-4 py-2"
                       onClick={() => handleAddCard(list.id)}
                     >
                       + Tambahkan Kartu
@@ -871,7 +871,7 @@ const Board = () => {
             <div>
               <div className="flex flex-col border border-primary-blue justify-center items-center bg-secondary-blue bg-opacity-10 rounded-lg py-2 text-center w-60">
                 <button
-                  className="text-lg font-semibold text-center"
+                  className="font-bold flex justify-between items-center uppercase text-sm 2xl:text-base"
                   onClick={handleCreateBoard}
                 >
                   + Tambahkan List
