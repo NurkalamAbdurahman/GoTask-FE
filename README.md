@@ -1,6 +1,6 @@
 # 🧭 GoTask — Smart Task & Workspace Management
 
-🔗 **Live Demo:** [go-task-fe.vercel.app](https://go-task-fe-9hiv-3u7ott389-nurkalamabdurrahmans-projects.vercel.app/)
+🔗 **Live Demo:** [go-task-fe.vercel.app]([https://go-task-fe-9hiv-3u7ott389-nurkalamabdurrahmans-projects.vercel.app/](https://go-task-fe-9hiv-3u7ott389-nurkalamabdurahmans-projects.vercel.app/))
 📦 **Repository:** [GitHub - GoTask-FE](https://github.com/NurkalamAbdurrahman/GoTask-FE)
 
 ---
